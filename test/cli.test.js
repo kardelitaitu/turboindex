@@ -32,7 +32,7 @@ describe('CLI Wrapper', () => {
   it('--help flag should print help and exit', () => {
     const r = run(['--help']);
     assert.strictEqual(r.status, 0);
-    assert.ok(r.stdout.includes('TurboCode MCP'));
+    assert.ok(r.stdout.includes('TurboIndex'));
     assert.ok(r.stdout.includes('--help'));
     assert.ok(r.stdout.includes('--version'));
     assert.ok(r.stdout.includes('--debug'));
@@ -48,7 +48,7 @@ describe('CLI Wrapper', () => {
   it('-h short flag should print help and exit', () => {
     const r = run(['-h']);
     assert.strictEqual(r.status, 0);
-    assert.ok(r.stdout.includes('TurboCode MCP'));
+    assert.ok(r.stdout.includes('TurboIndex'));
   });
 
   it('-v short flag should print version and exit', () => {
@@ -185,7 +185,7 @@ describe('CLI Wrapper', () => {
   it('--help overrides --debug when both provided', () => {
     const r = run(['--debug', '--help']);
     assert.strictEqual(r.status, 0);
-    assert.ok(r.stdout.includes('TurboCode MCP'));
+    assert.ok(r.stdout.includes('TurboIndex'));
   });
 
   it('--version overrides --debug when both provided', () => {
