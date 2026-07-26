@@ -10,8 +10,14 @@ Powered by Google [TurboQuant](https://research.google/blog/turboquant-redefinin
 One-command install, zero config, zero cloud.
 
 ```bash
-npm install -g turboindex
+npm install -g turboindex    # Download the package
+npm approve-scripts turboindex  # Allow the setup script to run (see note below)
 ```
+
+> **Note:** npm's `allow-scripts` security feature blocks postinstall scripts by default.
+> The second command approves TurboIndex's setup script, which creates a Python virtual
+> environment and installs dependencies automatically. You'll see a banner with numbered
+> progress steps as it sets up.
 
 [![npm version](https://img.shields.io/npm/v/turboindex.svg)](https://www.npmjs.com/package/turboindex)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
@@ -29,6 +35,29 @@ npm install -g turboindex
 
 ```bash
 npm install -g turboindex
+npm approve-scripts turboindex
+```
+
+You'll see the postinstall setup script run:
+
+```
+  TurboIndex v1.0.1 — Local codebase vector search
+
+[1/5] Checking Node.js
+  ✓ Node.js v20.11.0
+[2/5] Finding Python
+  ✓ Python 3.11.4
+[3/5] Creating virtual environment
+  ✓ .venv created
+[4/5] Installing Python dependencies
+  ✓ fastembed, turbovec, fastmcp, pathspec
+[5/5] Installing AI skill
+  ✓ turboindex skill ready
+
+  TurboIndex is ready!
+
+  Add this to your MCP client config:
+  { "mcpServers": { "turboindex": { "command": "turboindex", "cwd": "." } } }
 ```
 
 ### GPU (CUDA / DirectML / CoreML)
