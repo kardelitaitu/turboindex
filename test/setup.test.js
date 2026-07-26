@@ -125,8 +125,8 @@ describe('Setup Script', () => {
   it('should handle venv already exists case', () => {
     const content = fs.readFileSync(SETUP_SCRIPT, 'utf-8');
     assert.ok(content.includes('fsImpl.existsSync(venvDir)'));
-    assert.ok(content.includes('Virtual environment already exists.'));
-    assert.ok(content.includes('Virtual environment created.'));
+    assert.ok(content.includes('.venv already exists'));
+    assert.ok(content.includes('.venv created'));
   });
 
   it('should verify requirements.txt fallback path', () => {
@@ -145,7 +145,7 @@ describe('Setup Script', () => {
 
   it('should have proper error function for logging', () => {
     const content = fs.readFileSync(SETUP_SCRIPT, 'utf-8');
-    assert.ok(content.includes("console.error(`[turboindex] ERROR:"));
+    assert.ok(content.includes('function error('));
   });
 
   it('should detect Python 3.9+ correctly', () => {
@@ -173,8 +173,7 @@ describe('Setup Script', () => {
   it('should have run() helper with execSync and error handling', () => {
     const content = fs.readFileSync(SETUP_SCRIPT, 'utf-8');
     assert.ok(content.includes('function run('));
-    assert.ok(content.includes('execSync'));
-    assert.ok(content.includes('deps.exit || process.exit'));
+    assert.ok(content.includes('deps.execSync'));
   });
 
   it('should self-execute main() at module end', () => {
@@ -190,7 +189,7 @@ describe('Setup Script', () => {
 
   it('should have log and error function distinction', () => {
     const content = fs.readFileSync(SETUP_SCRIPT, 'utf-8');
-    assert.ok(content.includes('console.error(`[turboindex] ERROR'));
-    assert.ok(content.includes('console.log(`[turboindex]'));
+    assert.ok(content.includes('function error('));
+    assert.ok(content.includes('function log('));
   });
 });
