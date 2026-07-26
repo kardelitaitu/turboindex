@@ -200,6 +200,7 @@ Your AI assistant can now index and search your local codebase. On startup, the 
 | **[Architecture](docs/architecture.md)** | System design, decisions, and data flows |
 | **[Technical Reference](docs/reference.md)** | Implementation details for contributors |
 | **[Roadmap](docs/roadmap.md)** | Planned features and development status |
+| **[AGENTS.md Guide](docs/agents-guide.md)** | Copy-paste block to teach your AI agent how to use TurboIndex |
 
 ---
 
