@@ -169,6 +169,46 @@ TurboIndex works with any MCP-compatible agent. Below are setup instructions for
 
 Your AI assistant can now index and search your local codebase. On startup, the server automatically indexes the `cwd` directory — no manual `index_directory` call required.
 
+### Teach your agent
+
+For best results, paste this into your project's `AGENTS.md` so your coding agent knows
+the right workflow:
+
+<!-- TURBOINDEX-AGENTS: copy from here -->
+````markdown
+## TurboIndex — Local Code Search (MCP)
+
+You have access to **TurboIndex**, a local semantic codebase search server.
+
+### Tools
+
+| Tool | When to use |
+|---|---|
+| `index_directory(path)` | First thing — queue the project root for background indexing. Idempotent, returns instantly. |
+| `search_codebase(query, k=3)` | Find code by what it **does**. Use natural language. First call loads model (~5s), then ~12ms. |
+| `keyword_search(keyword, ext="")` | Exact case-insensitive text match. Optional file extension filter. |
+| `update_file_index(path)` | After editing a file — re-index immediately. |
+| `read_file_content(path)` | Read a file's full content from disk. |
+| `get_index_stats()` | Check indexing progress (instant, no model load). |
+| `drop_index()` | Clear everything, start fresh. |
+
+### Workflow
+
+```
+1. index_directory("/project")     # Queue indexing — returns instantly
+2. search_codebase("your query", k=5)  # First call slow (~5s model load), then instant
+3. update_file_index("/edited/file.py")  # After edits
+4. get_index_stats()  # Check progress anytime
+```
+
+**Key behaviors:** `index_directory` is async and idempotent — always call it.
+`search_codebase` loads the model on first call (~5s delay). The server auto-indexes
+`cwd` on startup. Index persists across restarts. Stale files re-index automatically.
+<!-- TURBOINDEX-AGENTS: end copy -->
+````
+
+> Full version with detailed workflows and gotchas: **[AGENTS.md Guide](docs/agents-guide.md)**
+
 ---
 
 ## Features
