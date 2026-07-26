@@ -201,24 +201,24 @@ Your AI assistant can now index and search your local codebase. On startup, the 
 
 ### Python (current)
 
-Synthetic benchmark: 100 generated code files, 100 search iterations, CPU embeddings.
+Synthetic benchmark: 100 generated code files, 50 search iterations, CPU embeddings.
 
 | Category | Metric | Value |
 |---|---|---|
-| **Indexing** | Throughput | **~53 files/sec** (100 files in 1.9s) |
-| Indexing | Median | ~12 ms/file |
-| Indexing | P95 | ~21 ms/file |
-| Indexing | P99 | ~35 ms/file |
-| **Semantic search (k=3)** | Median | ~2.9 ms |
-| Semantic search (k=3) | P95 | ~3.5 ms |
-| **Semantic search (k=5)** | Median | ~2.8 ms |
-| Semantic search (k=5) | P95 | ~3.4 ms |
-| **Semantic search (k=10)** | Median | ~2.9 ms |
-| Semantic search (k=10) | P95 | ~3.3 ms |
+| **Indexing** | Throughput | **~22 files/sec** (100 files in 4.5s) |
+| Indexing | Median | ~32 ms/file |
+| Indexing | P95 | ~54 ms/file |
+| Indexing | P99 | ~80 ms/file |
+| **Semantic search (k=3)** | Median | ~12.3 ms |
+| Semantic search (k=3) | P95 | ~13.1 ms |
+| **Semantic search (k=5)** | Median | ~12.1 ms |
+| Semantic search (k=5) | P95 | ~13.7 ms |
+| **Semantic search (k=10)** | Median | ~12.4 ms |
+| Semantic search (k=10) | P95 | ~13.3 ms |
 | **Keyword search** | Median | ~0.13 ms |
-| Keyword search | P95 | ~0.15 ms |
-| **Cold start (model load)** | — | ~7 ms |
-| **Process memory** | — | ~20 MB (Python + embed subprocess) |
+| Keyword search | P95 | ~0.14 ms |
+| **Cold start (model load)** | — | ~6 ms |
+| **Process memory** | — | ~500 MB (Python + embed subprocess, 768-dim jina model) |
 
 Run benchmarks yourself:
 ```bash
@@ -233,11 +233,11 @@ A native Rust port would replace the Python server + embed subprocess with a sin
 
 | Category | Python (current) | Rust (estimate) | Why |
 |---|---|---|---|
-| **Indexing throughput** | ~55 files/sec | **~65–70 files/sec** | Eliminate JSON-RPC to embed subprocess; embed ONNX inline |
-| **Semantic search (k=5)** | ~3.0 ms | **~0.3–0.5 ms** | No GIL, no Python dict lookups, native `turbovec-rs` |
-| **Keyword search** | ~0.08 ms | **~0.01 ms** | `memchr` over contiguous memory instead of Python string ops |
-| **Cold start** | ~5 ms | **~5 ms** | ONNX Runtime model load is the bottleneck (unchanged) |
-| **Process memory** | ~20 MB | **~5–8 MB** | Single binary, no Python interpreter, no subprocess |
+| **Indexing throughput** | ~22 files/sec | **~65–70 files/sec** | Eliminate JSON-RPC to embed subprocess; embed ONNX inline |
+| **Semantic search (k=5)** | ~12 ms | **~0.3–0.5 ms** | No GIL, no Python dict lookups, native `turbovec-rs` |
+| **Keyword search** | ~0.13 ms | **~0.01 ms** | `memchr` over contiguous memory instead of Python string ops |
+| **Cold start** | ~6 ms | **~5 ms** | ONNX Runtime model load is the bottleneck (unchanged) |
+| **Process memory** | ~500 MB | **~5–8 MB** | Single binary, no Python interpreter, no subprocess |
 | **Dependency footprint** | Node.js + Python + .venv | **Single binary** | `cargo install turboindex`, no runtime deps |
 
 The real win of a Rust port is not raw speed — it's **consistency** (no GC pauses, no GIL contention under concurrent search), **simplicity** (one static binary), and **eliminating the Node.js + Python runtime dependency**.
