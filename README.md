@@ -5,7 +5,9 @@
 
 # TurboIndex
 
-A **fully local** codebase vector search MCP server powered by [Turbovec](https://github.com/andrewm4894/turbovec).  
+A **fully local** codebase vector search MCP server powered by [Turbovec](https://github.com/andrewm4894/turbovec)  
+and [jina-embeddings-v2-base-code](https://huggingface.co/jinaai/jina-embeddings-v2-base-code)  
+(768-dim, 8K context, code-trained on 30+ languages).  
 Index your projects and search them semantically — no cloud, no data leaves your machine.
 
 ```bash
