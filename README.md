@@ -1,6 +1,6 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/TurboCode-MCP-FF6B35?style=for-the-badge&logo=python&logoColor=white">
-  <img alt="TurboIndex" src="https://img.shields.io/badge/TurboCode-MCP-FF6B35?style=for-the-badge&logo=python&logoColor=white">
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/TurboIndex-FF6B35?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="TurboIndex" src="https://img.shields.io/badge/TurboIndex-FF6B35?style=for-the-badge&logo=python&logoColor=white">
 </picture>
 
 # TurboIndex
@@ -16,7 +16,7 @@ npm install -g turboindex
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Node >=18](https://img.shields.io/badge/node->=18-green.svg)](https://nodejs.org)
 [![Python >=3.9](https://img.shields.io/badge/python->=3.9-blue.svg)](https://python.org)
-[![Tests: 662 passing](https://img.shields.io/badge/tests-662%20passing-brightgreen.svg)](https://github.com/anomalyco/turboindex)
+[![Tests: 662 passing](https://img.shields.io/badge/tests-662%20passing-brightgreen.svg)](https://github.com/kardelitaitu/turboindex)
 
 ---
 
