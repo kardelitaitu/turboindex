@@ -5,10 +5,9 @@
 
 # TurboIndex
 
-A **fully local** codebase vector search MCP server powered by [Turbovec](https://github.com/andrewm4894/turbovec)  
-and [jina-embeddings-v2-base-code](https://huggingface.co/jinaai/jina-embeddings-v2-base-code)  
-(768-dim, 8K context, code-trained on 30+ languages).  
-Index your projects and search them semantically — no cloud, no data leaves your machine.
+Fully local semantic code search for your AI assistant.  
+Powered by Google [TurboQuant](https://research.google/blog/turboquant-redefining-ai-efficiency-with-extreme-compression/) vector quantization and [jina-v2-base-code](https://huggingface.co/jinaai/jina-embeddings-v2-base-code) embeddings (768-dim, 8K context, code-trained on 30+ languages).  
+One-command install, zero config, zero cloud.
 
 ```bash
 npm install -g turboindex
@@ -161,7 +160,7 @@ Your AI assistant can now index and search your local codebase. On startup, the 
 | **Model Choice** | `--model=<name>` flag to swap embedding models (default: `jinaai/jina-embeddings-v2-base-code`). |
 | **GPU Auto-Detect** | Uses CUDA/DirectML/CoreML automatically when `onnxruntime-gpu` is installed. |
 | **.gitignore Aware** | `index_directory` skips gitignored files by default. Opt out with `respect_gitignore=False`. |
-| **662 Tests** | All passing, regression-gated. |
+| **777 Tests** | Python + JS, all passing, regression-gated. |
 | **Auto-Shutdown** | Exits after 30 idle minutes. Client auto-restarts on next call. |
 | **Self-Maintaining** | Idle worker re-indexes stale files automatically. |
 | **One-Command Install** | Python venv and dependencies set up automatically. |
