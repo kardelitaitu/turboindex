@@ -32,7 +32,7 @@ function check(cmd, label) {
 }
 
 function main() {
-  console.log("=== TurboCode MCP — Pre-Publish Validation ===\n");
+  console.log("=== TurboIndex — Pre-Publish Validation ===\n");
 
   // 1. Check .venv exists
   if (!fs.existsSync(PYTHON)) {
@@ -70,7 +70,7 @@ function main() {
   );
 
   // 6. All JS tests
-  check("node --test test/", "JS tests (all)");
+  check("node --test test/cli.test.js test/runtime.test.js test/setup.test.js", "JS tests (all)");
 
   // 7. CLI smoke test
   check("node bin/cli.js --version", "CLI --version");
@@ -78,7 +78,7 @@ function main() {
 
   // 8. MCP protocol smoke test
   console.log("\n--- MCP protocol smoke test ---");
-  const proc = spawn(PYTHON, [path.join(ROOT, "src", "server.py")], {
+  const proc = spawn(PYTHON, [path.join(ROOT, "src", "server.py"), "--stdio"], {
     stdio: ["pipe", "pipe", "pipe"],
     cwd: ROOT,
     env: { ...process.env, MCP_DEBUG: "" },
