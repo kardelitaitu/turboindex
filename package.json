@@ -21,7 +21,7 @@
     "test": "npm run test:py && npm run test:js",
     "test:all": "npm run test:py && npm run test:js && npm run test:integration",
     "test:py": "node scripts/run-python.js -m pytest tests/ -q",
-    "test:js": "node --test test/",
+    "test:js": "node --test test/cli.test.js test/runtime.test.js test/setup.test.js",
     "test:integration": "node scripts/run-python.js -m pytest tests/test_integration.py -v",
     "lint": "node scripts/run-python.js -m ruff check src/ tests/ benchmarks/",
     "lint:format": "node scripts/run-python.js -m ruff format --check src/ tests/ benchmarks/",
