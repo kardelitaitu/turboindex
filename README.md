@@ -186,7 +186,7 @@ You have access to **TurboIndex**, a local semantic codebase search server.
 |---|---|
 | `index_directory(path)` | First thing — queue the project root for background indexing. Idempotent, returns instantly. |
 | `search_codebase(query, k=3)` | Find code by what it **does**. Use natural language. First call loads model (~5s), then ~12ms. |
-| `keyword_search(keyword, ext="")` | Exact case-insensitive text match. Optional file extension filter. |
+| `keyword_search(keyword, file_extension_filter="")` | Exact case-insensitive text match. Optional file extension filter. |
 | `update_file_index(path)` | After editing a file — re-index immediately. |
 | `read_file_content(path)` | Read a file's full content from disk. |
 | `get_index_stats()` | Check indexing progress (instant, no model load). |

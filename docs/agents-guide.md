@@ -22,7 +22,7 @@ indexes your project's source files and lets you search them by meaning, not jus
 |---|---|---|
 | `index_directory(path, respect_gitignore=True)` | Queue a directory for background indexing | First thing you do — index the project root. Returns instantly, files process in batches. |
 | `search_codebase(query, k=3)` | Semantic search — find code by what it **does** | When you need to find relevant code for a feature, bug, or refactor. Use natural language queries. |
-| `keyword_search(keyword, ext_filter="")` | Exact case-insensitive text match (30 result cap) | When you know the exact function/variable/string name. Optional file extension filter. |
+| `keyword_search(keyword, file_extension_filter="")` | Exact case-insensitive text match (30 result cap) | When you know the exact function/variable/string name. Optional file extension filter. |
 | `update_file_index(path)` | Immediately re-index a single file | After you edit a file — keeps search results fresh without re-indexing everything. |
 | `read_file_content(path)` | Read a file's full unabridged content | To see the complete file without opening it separately. |
 | `get_index_stats()` | Index health (instant, no model load) | To check if indexing is complete or how many files are tracked. |
