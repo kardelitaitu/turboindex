@@ -42,7 +42,7 @@ def _recv(pipe, timeout=60):
 @pytest.fixture(scope="module")
 def mcp_server():
     proc = subprocess.Popen(
-        [sys.executable, "-u", SERVER_SCRIPT],
+        [sys.executable, "-u", SERVER_SCRIPT, "--stdio"],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
