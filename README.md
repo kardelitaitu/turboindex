@@ -16,9 +16,11 @@ npm install -g turboindex
 
 [![npm version](https://img.shields.io/npm/v/turboindex.svg)](https://www.npmjs.com/package/turboindex)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](./CODE_OF_CONDUCT.md)
+[![Security Policy](https://img.shields.io/badge/security-policy-brightgreen.svg)](./SECURITY.md)
 [![Node >=18](https://img.shields.io/badge/node->=18-green.svg)](https://nodejs.org)
 [![Python >=3.9](https://img.shields.io/badge/python->=3.9-blue.svg)](https://python.org)
-[![Tests: 662 passing](https://img.shields.io/badge/tests-662%20passing-brightgreen.svg)](https://github.com/kardelitaitu/turboindex)
+[![Tests: 777 passing](https://img.shields.io/badge/tests-777%20passing-brightgreen.svg)](https://github.com/kardelitaitu/turboindex)
 
 ---
 
