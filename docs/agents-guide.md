@@ -83,7 +83,7 @@ indexes your project's source files and lets you search them by meaning, not jus
   Still call `index_directory` to be safe — it's a fast no-op if everything is up to date.
 - **`get_index_stats` is always instant** — it never loads the model. Use it freely.
 - **Gotchas in search results** — if the model hasn't loaded yet, search results may be empty.
-  Check `get_index_stats()` → `"model_loaded": true` if results seem wrong.
+  Check `turboindex://stats` → `"model_loaded": true` if results seem wrong.
 - **Persistent index** — the index survives restarts. Files indexed last week are still there.
   Stale files (>7 days since last scan) are re-indexed automatically.
 - **Supported file types**: `.py`, `.rs`, `.md`, `.txt`, `.js`, `.ts`, `.go`, `.toml`, `.json`,
