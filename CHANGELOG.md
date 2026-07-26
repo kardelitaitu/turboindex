@@ -6,6 +6,22 @@
 
 ---
 
+## [1.0.3] — 2026-07-26
+
+### Added
+
+- **AGENTS.md guide** (`docs/agents-guide.md`) — copy-paste template to teach AI coding agents how to use TurboIndex. Covers all 7 tools, 5 workflows, important behaviors, a real-world example transcript (refund bug fix), an 8-question FAQ, and a "why this matters" section.
+- **Condensed AGENTS.md block in README** — quick-start now has a "Teach your agent" section with a short copy-paste block, linked to the full guide.
+- **Roadmap backlog items** — per-file exclusion tool and exclusion visibility in `get_index_stats()`, both revealed by the FAQ review.
+
+### Fixed
+
+- **Stale `search_codebase` latency** — `docs/usage.md` said ~200ms for subsequent calls; corrected to ~12ms (matches benchmarks).
+- **Wrong `keyword_search` parameter name** — docs had `ext` / `ext_filter`; corrected to `file_extension_filter` in both README and agents-guide.
+- **FAQ accuracy** — corrected "empty results during model load" (model loads synchronously, results are never empty during load) and replaced fragile manual `meta.json`/`store.json` edit workaround with honest `.gitignore` approach.
+
+---
+
 ## [1.0.2] — 2026-07-26
 
 ### Changed
