@@ -91,21 +91,15 @@ describe('Runtime behavior', () => {
     assert.strictEqual(exitCode, 1);
   });
 
-  it('setup.run calls exit on execSync failure', () => {
-    let exitCode = null;
+  it('setup.run re-throws on execSync failure', () => {
     const runFn = setup.run;
 
     assert.throws(() => {
       runFn('some-command-that-fails', {}, {
         execSync: () => { throw new Error('command failed'); },
-        exit: (code) => {
-          exitCode = code;
-          throw new Error(`exit ${code}`);
-        },
+        exit: () => { throw new Error('should not call exit'); },
       });
-    }, /exit 1/);
-
-    assert.strictEqual(exitCode, 1);
+    }, /command failed/);
   });
 
   it('setup.main throws when pip install fails', () => {
@@ -115,22 +109,30 @@ describe('Runtime behavior', () => {
     assert.throws(() => {
       setup.main({
         fs,
-        isWin: true,
+        isWin: false,
         paths: {
           venvDir: project.venvDir,
           requirements: project.requirements,
         },
         findPython: () => 'python3',
+        execSync: (cmd) => {
+          if (cmd.includes('--version')) return 'Python 3.11.0';
+          if (cmd.includes('-m venv')) {
+            fs.mkdirSync(project.binDir, { recursive: true });
+            fs.writeFileSync(project.pipPath, '', 'utf-8');
+            fs.writeFileSync(project.pythonBin, '', 'utf-8');
+            return '';
+          }
+          throw new Error('pip install failed');
+        },
         log: () => {},
         error: () => {},
-        exit: () => {},
+        exit: (code) => { throw new Error(`pip install failed (exit ${code})`); },
         run: (cmd) => {
           if (cmd.includes('-m venv')) {
             fs.mkdirSync(project.binDir, { recursive: true });
             fs.writeFileSync(project.pipPath, '', 'utf-8');
             fs.writeFileSync(project.pythonBin, '', 'utf-8');
-          } else {
-            throw new Error('pip install failed');
           }
         },
       });
@@ -158,6 +160,7 @@ describe('Runtime behavior', () => {
     const project = createTempProject();
     fs.rmSync(project.venvDir, { recursive: true, force: true });
     const runCalls = [];
+    const execCalls = [];
 
     setup.main({
       fs,
@@ -167,6 +170,12 @@ describe('Runtime behavior', () => {
         requirements: project.requirements,
       },
       findPython: () => 'python3',
+      execSync: (cmd) => {
+        execCalls.push(cmd);
+        if (cmd.includes('--version')) return 'Python 3.11.0';
+        if (cmd.includes('install')) return 'Successfully installed fastmcp-3.0.0 turbovec-1.0.0 fastembed-2.0.0';
+        return '';
+      },
       log: () => {},
       error: () => {},
       exit: (code) => { throw new Error(`unexpected exit ${code}`); },
@@ -180,15 +189,15 @@ describe('Runtime behavior', () => {
       },
     });
 
-    assert.strictEqual(runCalls.length, 2);
+    assert.strictEqual(runCalls.length, 1);
     assert.ok(runCalls[0].includes('-m venv'));
-    assert.ok(runCalls[1].includes('install -r'));
+    assert.ok(execCalls.some(c => c.includes('install -r')));
   });
 
   it('setup.main falls back to default packages when requirements are missing', () => {
     const project = createTempProject();
     fs.rmSync(project.requirements, { force: true });
-    const runCalls = [];
+    const execCalls = [];
 
     setup.main({
       fs,
@@ -198,14 +207,19 @@ describe('Runtime behavior', () => {
         requirements: project.requirements,
       },
       findPython: () => 'python3',
+      execSync: (cmd) => {
+        execCalls.push(cmd);
+        if (cmd.includes('--version')) return 'Python 3.11.0';
+        return '';
+      },
       log: () => {},
       error: () => {},
       exit: (code) => { throw new Error(`unexpected exit ${code}`); },
-      run: (cmd) => runCalls.push(cmd),
+      run: () => {},
     });
 
-    assert.strictEqual(runCalls.length, 1);
-    assert.ok(runCalls[0].includes('fastmcp turbovec sentence-transformers numpy'));
+    assert.ok(execCalls.some(c => c.includes('install')));
+    assert.ok(execCalls.some(c => c.includes('fastembed')));
   });
 
   it('cli.main exits cleanly for --help without spawning Python', () => {
@@ -347,25 +361,26 @@ describe('Runtime behavior', () => {
     assert.deepStrictEqual(exitTrap.codes, [130, 143]);
   });
 
-  it('setup.log prefixes with [turboindex]', () => {
+  it('setup.log writes indented message to console', () => {
     const logs = [];
     const originalLog = console.log;
     console.log = (msg) => logs.push(msg);
     try {
       setup.log('test message');
-      assert.strictEqual(logs[0], '[turboindex] test message');
+      assert.strictEqual(logs[0], '  test message');
     } finally {
       console.log = originalLog;
     }
   });
 
-  it('setup.error prefixes with [turboindex] ERROR', () => {
+  it('setup.error writes error message with red cross to stderr', () => {
     const errors = [];
     const originalError = console.error;
     console.error = (msg) => errors.push(msg);
     try {
       setup.error('something went wrong');
-      assert.strictEqual(errors[0], '[turboindex] ERROR: something went wrong');
+      assert.ok(errors[0].includes('something went wrong'));
+      assert.ok(errors[0].includes('✗'));
     } finally {
       console.error = originalError;
     }
@@ -374,7 +389,7 @@ describe('Runtime behavior', () => {
   it('setup.run passes opts through to execSync', () => {
     let capturedCmd = null;
     let capturedOpts = null;
-    setup.run('test-cmd', { cwd: '/tmp', timeout: 5000 }, {
+    setup.run('test-cmd', { capture: false, cwd: '/tmp', timeout: 5000 }, {
       execSync: (cmd, opts) => {
         capturedCmd = cmd;
         capturedOpts = opts;
@@ -448,11 +463,15 @@ describe('Runtime behavior', () => {
   });
 
   it('setup.main continues when venv already exists', () => {
-    const logs = [];
+    const checks = [];
     const project = createTempProject();
     setup.main({
       fs,
       isWin: false,
+      execSync: (cmd) => {
+        if (cmd.includes('--version')) return 'Python 3.11.0';
+        return 'Successfully installed fastmcp-3.0.0';
+      },
       paths: {
         venvDir: project.venvDir,
         requirements: project.requirements,
@@ -460,12 +479,13 @@ describe('Runtime behavior', () => {
         pipPath: project.pipPath,
       },
       findPython: () => 'python3',
-      log: (msg) => logs.push(msg),
+      check: (msg) => checks.push(msg),
+      log: () => {},
       error: () => {},
       exit: (code) => { throw new Error(`unexpected exit ${code}`); },
       run: () => {},
     });
-    assert.ok(logs.some(l => l.includes('already exists')));
+    assert.ok(checks.some(l => l.includes('already exists')));
   });
 
   it('setup.main exits when pythonBin not found after setup', () => {
@@ -477,10 +497,15 @@ describe('Runtime behavior', () => {
           existsSync: (target) =>
             target === '/fake/venv' ||           // venvDir exists
             target === '/fake/requirements.txt' ||  // requirements exist
-            target === '/fake/venv/bin/pip',        // pip exists
-            // pythonBin does NOT exist → step 4 fails
+            target === '/fake/venv/bin/pip' ||      // pip exists
+            target === '.venv',
+            // pythonBin does NOT exist → final check fails
         },
         isWin: false,
+        execSync: (cmd) => {
+          if (cmd.includes('--version')) return 'Python 3.11.0';
+          return 'Successfully installed fastmcp-3.0.0';
+        },
         paths: {
           venvDir: '/fake/venv',
           requirements: '/fake/requirements.txt',
@@ -692,7 +717,7 @@ describe('Runtime behavior', () => {
     }
   });
 
-  it('setup.run uses default opts when no opts passed', () => {
+  it('setup.run uses capture mode by default', () => {
     let capturedOpts = null;
     setup.run('test-cmd', undefined, {
       execSync: (cmd, opts) => {
@@ -700,7 +725,7 @@ describe('Runtime behavior', () => {
       },
       exit: (code) => { throw new Error('should not exit'); },
     });
-    assert.strictEqual(capturedOpts.stdio, 'inherit');
+    assert.deepStrictEqual(capturedOpts.stdio, ['pipe', 'pipe', 'pipe']);
   });
 
   it('setup.findPython uses defaults when no options', () => {
@@ -733,10 +758,15 @@ describe('Runtime behavior', () => {
     fs.writeFileSync(winsPip, '', 'utf-8');
     fs.writeFileSync(winsPython, '', 'utf-8');
 
-    const runCalls = [];
+    const execCalls = [];
     setup.main({
       fs,
       isWin: true,
+      execSync: (cmd) => {
+        execCalls.push(cmd);
+        if (cmd.includes('--version')) return 'Python 3.11.0';
+        return '';
+      },
       paths: {
         venvDir: project.venvDir,
         requirements: project.requirements,
@@ -747,10 +777,10 @@ describe('Runtime behavior', () => {
       log: () => {},
       error: () => {},
       exit: (code) => { throw new Error(`unexpected exit ${code}`); },
-      run: (cmd) => runCalls.push(cmd),
+      run: () => {},
     });
 
-    assert.ok(runCalls.some(c => c.includes('python.exe') || c.includes('pip.exe')));
+    assert.ok(execCalls.some(c => c.includes('python.exe') || c.includes('pip.exe')));
   });
 
   it('setup.main exits when pip not found after venv creation', () => {
@@ -907,7 +937,7 @@ describe('Runtime behavior', () => {
     assert.strictEqual(spawnCalls[0].opts.env.PATH, '/custom/path');
   });
 
-  it('setup.run with empty opts object uses defaults', () => {
+  it('setup.run with empty opts object captures by default', () => {
     let capturedOpts = null;
     setup.run('test-cmd', {}, {
       execSync: (cmd, opts) => {
@@ -915,7 +945,7 @@ describe('Runtime behavior', () => {
       },
       exit: (code) => { throw new Error('should not exit'); },
     });
-    assert.strictEqual(capturedOpts.stdio, 'inherit');
+    assert.deepStrictEqual(capturedOpts.stdio, ['pipe', 'pipe', 'pipe']);
   });
 
   it('setup.findPython handles version with extra trailing text', () => {
@@ -927,14 +957,13 @@ describe('Runtime behavior', () => {
     assert.strictEqual(result, 'python');
   });
 
-  it('setup.run error message includes the failed command', () => {
-    const errors = [];
+  it('setup.run error propagates the underlying error', () => {
     assert.throws(() => {
       setup.run('pip install --broken-flag', {}, {
         execSync: () => { throw new Error('command failed'); },
-        exit: (code) => { throw new Error('exit 1'); },
+        exit: (code) => { throw new Error('should not call exit'); },
       });
-    }, /exit 1/);
+    }, /command failed/);
   });
 
   it('setup.main without paths uses defaults (no crash)', () => {
@@ -945,6 +974,10 @@ describe('Runtime behavior', () => {
     setup.main({
       fs: fsImpl,
       isWin: false,
+      execSync: (cmd) => {
+        if (cmd.includes('--version')) return 'Python 3.11.0';
+        return 'Successfully installed fastmcp-3.0.0';
+      },
       findPython: () => 'python3',
       log: () => {},
       error: () => {},
@@ -956,9 +989,17 @@ describe('Runtime behavior', () => {
   it('setup.main with Python command containing spaces works', () => {
     const project = createTempProject();
     fs.rmSync(project.venvDir, { recursive: true, force: true });
+    let pythonVersionCmd = null;
     setup.main({
       fs,
       isWin: false,
+      execSync: (cmd) => {
+        if (cmd.includes('--version')) {
+          pythonVersionCmd = cmd;
+          return 'Python 3.11.0';
+        }
+        return 'Successfully installed fastmcp-3.0.0';
+      },
       paths: {
         venvDir: project.venvDir,
         requirements: project.requirements,
@@ -977,5 +1018,6 @@ describe('Runtime behavior', () => {
         }
       },
     });
+    assert.ok(pythonVersionCmd.includes('/usr/local/bin/python3'));
   });
 });
