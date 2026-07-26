@@ -120,6 +120,152 @@ See [Getting Started](getting-started.md) for full setup instructions.
 
 ---
 
+## Real-world example
+
+Here's a complete transcript of an AI coding agent using TurboIndex to fix a bug
+in an Express.js API. The project is at `/home/dev/payment-api`.
+
+> **Scenario:** A user reports that refunds aren't working. The agent needs to find
+> the refund logic, understand how it works, and fix a missing validation check.
+
+### 1. Start of session — index the project
+
+```
+🤖 Agent:  → index_directory("/home/dev/payment-api")
+
+📡 TurboIndex:
+  Queued 142 files (138 new, 4 changed) for indexing.
+  Background worker is processing 5 files per batch.
+```
+
+### 2. Check indexing progress while it works
+
+```
+🤖 Agent:  → get_index_stats()
+
+📡 TurboIndex:
+  Index Stats
+  - Vectors: 35
+  - Files tracked: 35
+  - Worker: indexing (107 queued, 35 processed, 0 errors)
+  - Model loaded: False
+```
+
+### 3. Search for the refund logic
+
+```
+🤖 Agent:  → search_codebase("process a refund transaction", k=5)
+
+📡 TurboIndex (first call, ~5s model load):
+  **/home/dev/payment-api/src/services/refund.service.ts** (score: 0.8921)
+  ```typescript
+  async function processRefund(transactionId: string, amount: number) {
+    const transaction = await findTransaction(transactionId);
+    if (!transaction) throw new NotFoundError("Transaction not found");
+    // BUG: missing validation — doesn't check if transaction is refundable
+    const refund = await paymentGateway.refund(transaction.gatewayId, amount);
+    await updateTransactionStatus(transactionId, "refunded");
+    return refund;
+  }
+  ```
+  ---
+  **/home/dev/payment-api/src/routes/refund.routes.ts** (score: 0.7345)
+  ```typescript
+  router.post("/refund", async (req, res) => {
+    const { transactionId, amount } = req.body;
+    const result = await processRefund(transactionId, amount);
+    res.json(result);
+  });
+  ```
+  ---
+  **/home/dev/payment-api/src/models/transaction.model.ts** (score: 0.6892)
+  ```typescript
+  enum TransactionStatus {
+    completed = "completed",
+    refunded = "refunded",
+    failed = "failed",
+    pending = "pending"
+  }
+  ```
+```
+
+### 4. Read the full refund service file
+
+```
+🤖 Agent:  → read_file_content("/home/dev/payment-api/src/services/refund.service.ts")
+
+📡 TurboIndex:
+  [Returns the full 120-line file — agent sees the complete context]
+```
+
+### 5. Fix the bug — add validation
+
+```typescript
+// The agent edits the file, adding:
+if (transaction.status !== TransactionStatus.completed) {
+  throw new ValidationError("Transaction is not refundable");
+}
+```
+
+### 6. Re-index the edited file
+
+```
+🤖 Agent:  → update_file_index("/home/dev/payment-api/src/services/refund.service.ts")
+
+📡 TurboIndex:
+  ✓ Indexed /home/dev/payment-api/src/services/refund.service.ts
+```
+
+### 7. Verify the fix is findable
+
+```
+🤖 Agent:  → search_codebase("refund validation check", k=3)
+
+📡 TurboIndex (instant, model already loaded):
+  **/home/dev/payment-api/src/services/refund.service.ts** (score: 0.9512)
+  ```typescript
+  if (transaction.status !== TransactionStatus.completed) {
+    throw new ValidationError("Transaction is not refundable");
+  }
+  ```
+```
+
+### 8. Confirm final state
+
+```
+🤖 Agent:  → get_index_stats()
+
+📡 TurboIndex:
+  Index Stats
+  - Vectors: 142
+  - Files tracked: 142
+  - Worker: idle (0 queued, 142 processed, 0 errors)
+  - Model loaded: True
+
+🤖 Agent:  → turboindex://status
+
+📡 TurboIndex: Idle. 142 files indexed.
+```
+
+### What the agent did right
+
+| Step | Tool | Why |
+|---|---|---|
+| 1 | `index_directory` | Started indexing immediately — didn't wait |
+| 2 | `get_index_stats` | Checked progress without triggering model load |
+| 3 | `search_codebase` | Used natural language, not regex. First call slow but worth it |
+| 4 | `read_file_content` | Got full file context before editing |
+| 5 | (edited the file) | Made the fix |
+| 6 | `update_file_index` | Re-indexed just the one changed file — fast |
+| 7 | `search_codebase` | Verified the fix appears in search results |
+| 8 | `get_index_stats` | Confirmed everything is indexed and idle |
+
+**Key takeaway:** The agent never waited for indexing to finish before searching.
+It used `get_index_stats` to monitor progress, searched once the model loaded,
+and kept the index fresh with `update_file_index` after edits.
+
+---
+
 ## Why this matters
 
 Without these instructions, a coding agent might:
