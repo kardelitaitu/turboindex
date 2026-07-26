@@ -990,7 +990,7 @@ class TestEnsureIndexWithMissingDirectory:
         mock_idmap = mocker.patch("server.IdMapIndex", return_value=mocker.MagicMock())
         server.index = None
         server.ensure_index()
-        mock_idmap.assert_called_once_with(dim=384, bit_width=4)
+        mock_idmap.assert_called_once_with(dim=768, bit_width=4)
 
     def test_ensure_index_caches_result(self):
         server.index = object()
@@ -1312,7 +1312,7 @@ class TestIndexStatsResourceFields:
         assert "files_tracked" in stats
         assert "model_loaded" in stats
         assert "model" in stats
-        assert stats["model"] == "BAAI/bge-small-en-v1.5"
+        assert stats["model"] == "jinaai/jina-embeddings-v2-base-code"
 
 
 class TestSignalHandlerNoDeadlock:

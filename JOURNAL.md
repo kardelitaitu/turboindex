@@ -15,8 +15,8 @@ We analyzed the viability, identified the core problems, and restructured everyt
 ### Key discoveries
 
 - **Turbovec has built-in persistence** (`write()` / `load()`), but `load()` is a **classmethod** — the instance method produces a broken index. This was verified experimentally.
-- **5 vectors × 384 dims** with 4-bit quantization = ~4KB on disk. 10,000 vectors = ~2MB. Storage is not a concern.
-- **`fastembed` (`BAAI/bge-small-en-v1.5`)** uses ~30MB RAM, significantly lighter than the old sentence-transformers model.
+- **5 vectors × 768 dims** with 4-bit quantization = ~4KB on disk. 10,000 vectors = ~2MB. Storage is not a concern.
+- **`fastembed` (`jinaai/jina-embeddings-v2-base-code`)** uses ~30MB RAM, significantly lighter than the old sentence-transformers model.
 
 ### Decisions made
 

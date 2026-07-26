@@ -89,7 +89,7 @@ class TestLazyLoading:
         mocker.patch.object(server._ModelClient, "_start")
         server.ensure_model()
         assert isinstance(server.model, server._ModelClient)
-        assert server.model._model_name == "BAAI/bge-small-en-v1.5"
+        assert server.model._model_name == "jinaai/jina-embeddings-v2-base-code"
 
     def test_ensure_model_does_not_reload(self, mocker):
         mocker.patch.object(server._ModelClient, "_start")

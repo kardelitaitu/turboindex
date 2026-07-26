@@ -101,7 +101,7 @@ def ensure_model():
     global model
     if model is not None:
         return
-    model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
+    model = TextEmbedding(model_name="jinaai/jina-embeddings-v2-base-code")
 
 def ensure_index():
     global index
@@ -621,7 +621,7 @@ def index_stats() -> str:
         "errors": worker_state["errors"],
         "last_error": worker_state["last_error"],
         "model_loaded": model is not None,
-        "model": "BAAI/bge-small-en-v1.5",
+        "model": "jinaai/jina-embeddings-v2-base-code",
     }
     return json.dumps(stats, indent=2)
 ```

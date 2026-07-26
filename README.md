@@ -151,7 +151,7 @@ Your AI assistant can now index and search your local codebase. On startup, the 
 | **Background Indexing** | Tools return instantly; files processed in batches. |
 | **Lazy Loading** | Server starts in ~100ms. The heavy ML model loads only on first search. |
 | **Process Isolation** | Embedding model runs in a subprocess — main server stays at ~15MB. |
-| **Model Choice** | `--model=<name>` flag to swap embedding models (default: `BAAI/bge-small-en-v1.5`). |
+| **Model Choice** | `--model=<name>` flag to swap embedding models (default: `jinaai/jina-embeddings-v2-base-code`). |
 | **GPU Auto-Detect** | Uses CUDA/DirectML/CoreML automatically when `onnxruntime-gpu` is installed. |
 | **.gitignore Aware** | `index_directory` skips gitignored files by default. Opt out with `respect_gitignore=False`. |
 | **662 Tests** | All passing, regression-gated. |

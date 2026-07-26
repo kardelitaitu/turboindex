@@ -75,7 +75,7 @@ SUPPORTED_EXTENSIONS: tuple[str, ...] = (
 )
 
 # Lazy-loaded globals
-MODEL_NAME: str = "BAAI/bge-small-en-v1.5"
+MODEL_NAME: str = "jinaai/jina-embeddings-v2-base-code"
 model: object | None = None  # _ModelClient instance or None
 index: IdMapIndex | None = None
 meta: dict[str, dict] = {}
@@ -222,10 +222,10 @@ def ensure_index() -> None:
                 log(f"WARNING: Failed to load index ({e}). Creating empty.")
                 with contextlib.suppress(Exception):
                     os.remove(INDEX_PATH)
-                index = IdMapIndex(dim=384, bit_width=4)
+                index = IdMapIndex(dim=768, bit_width=4)
         else:
             log("Creating new empty index.")
-            index = IdMapIndex(dim=384, bit_width=4)
+            index = IdMapIndex(dim=768, bit_width=4)
 
 
 def ensure_resources() -> None:

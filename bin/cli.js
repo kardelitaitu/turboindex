@@ -49,7 +49,7 @@ OPTIONS:
     --help              Print this help message and exit
     --version           Print the version number and exit
     --debug             Enable verbose logging to stderr
-    --model=<name>      Override the embedding model (default: BAAI/bge-small-en-v1.5)
+    --model=<name>      Override the embedding model (default: jinaai/jina-embeddings-v2-base-code)
     --workspace=<path>  Directory to auto-index on startup (default: auto-detect)
 
 EXAMPLES:

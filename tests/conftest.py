@@ -54,7 +54,7 @@ def tmp_paths(tmp_path, monkeypatch):
 @pytest.fixture
 def mock_model(mocker):
     instance = MagicMock()
-    instance.encode.return_value = np.random.rand(1, 384).astype(np.float32)
+    instance.encode.return_value = np.random.rand(1, 768).astype(np.float32)
     import server
 
     server.model = instance

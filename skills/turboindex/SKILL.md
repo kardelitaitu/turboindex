@@ -6,7 +6,7 @@ trigger: /turboindex
 
 # /turboindex
 
-Local semantic codebase search powered by vector embeddings (BAAI/bge-small-en-v1.5). Index your project once, then search by meaning — not just keywords. Fully offline, no cloud.
+Local semantic codebase search powered by vector embeddings (jinaai/jina-embeddings-v2-base-code). Index your project once, then search by meaning — not just keywords. Fully offline, no cloud.
 
 ## AI: When to auto-call the MCP tools
 

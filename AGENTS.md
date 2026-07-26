@@ -21,7 +21,7 @@ TurboIndex is a **globally-installable npm package** that provides a local codeb
 | CLI entry | JavaScript (Node.js) | Spawns Python process |
 | MCP server | Python (FastMCP) | Tools + Resources |
 | Vector index | Turbovec (IdMapIndex) | 4-bit quantized search |
-| Embeddings | fastembed (BAAI/bge-small-en-v1.5) | 384-dim local embeddings |
+| Embeddings | fastembed (jinaai/jina-embeddings-v2-base-code) | 768-dim local embeddings |
 
 ---
 

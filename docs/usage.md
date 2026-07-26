@@ -262,7 +262,7 @@ Detailed statistics as a JSON document. Also lightweight — never loads the mod
   "errors": 0,
   "last_error": null,
   "model_loaded": true,
-  "model": "BAAI/bge-small-en-v1.5"
+  "model": "jinaai/jina-embeddings-v2-base-code"
 }
 ```
 

@@ -360,7 +360,7 @@ Safe:
 | `meta.json` | ~KB | On boot | Grows with file count |
 | `store.json` | ~KB–MB | On boot | Grows with file count |
 | `IdMapIndex` (.tvim) | ~2–20 MB | Lazy (first search/index) | 4-bit quantization keeps it small |
-| `TextEmbedding` (fastembed) | ~30 MB | Lazy (first search/index) | BAAI/bge-small-en-v1.5 |
+| `TextEmbedding` (fastembed) | ~30 MB | Lazy (first search/index) | jinaai/jina-embeddings-v2-base-code |
 | Python runtime | ~30–50 MB | On boot | Base interpreter |
 | **Total (idle)** | **~5–10 MB** | | Only meta/store in memory |
 | **Total (active)** | **~60–90 MB** | | Model + index loaded |

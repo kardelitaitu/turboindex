@@ -36,12 +36,12 @@ def _pick_providers() -> list[str] | None:
 
 
 def main() -> None:
-    model_name = sys.argv[1] if len(sys.argv) > 1 else "BAAI/bge-small-en-v1.5"
+    model_name = sys.argv[1] if len(sys.argv) > 1 else "jinaai/jina-embeddings-v2-base-code"
     providers = _pick_providers()
     if providers:
         print(f"GPU providers detected: {providers}", file=sys.stderr)
     try:
-        kwargs = {"model_name": model_name, "max_length": 512}
+        kwargs = {"model_name": model_name, "max_length": 8192}
         if providers:
             kwargs["providers"] = providers
         model = TextEmbedding(**kwargs)
