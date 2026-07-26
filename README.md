@@ -33,7 +33,10 @@ npm install -g turboindex
 ```bash
 npm install -g turboindex
 # Install GPU-enabled ONNX Runtime inside the auto-created venv
-~/.turboindex/.venv/Scripts/pip install onnxruntime-gpu
+# Windows:
+%APPDATA%\npm\node_modules\turboindex\.venv\Scripts\pip install onnxruntime-gpu
+# Mac / Linux:
+$(npm root -g)/turboindex/.venv/bin/pip install onnxruntime-gpu
 ```
 
 ### Configure
