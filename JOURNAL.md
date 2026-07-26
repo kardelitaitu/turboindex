@@ -276,6 +276,70 @@ Applied one real bug fix in `server.py` and expanded the test suite from 248 to 
 - Should we add `os.path.isfile` to `index_directory`'s walk loop too? Currently only filtering by extension, not by file type.
 - Should the worker catch `BaseException` around `persist_all`? Current behavior lets `KeyboardInterrupt` kill the thread, which is debatable.
 
+## 2026-07-26 — AGENTS.md How-To Guide & Documentation Polish
+
+### What happened
+
+Created a comprehensive "how to teach your coding agent to use TurboIndex" guide
+(`docs/agents-guide.md`) and integrated it across the docs. The core insight:
+without explicit instructions, AI coding agents don't know the right workflow —
+they skip indexing, search before files are indexed, forget to re-index after edits,
+or use keyword search for everything.
+
+**Files created:**
+- `docs/agents-guide.md` — full guide with copy-paste AGENTS.md template, real-world
+example transcript, FAQ, and "why this matters" section
+
+**Files modified:**
+- `README.md` — added "Teach your agent" section with condensed copy-paste block
+- `docs/usage.md` — fixed stale `search_codebase` latency: 200ms → 12ms
+
+**8 commits:**
+
+| Commit | What |
+|---|---|
+| `296ae69` | Create docs/agents-guide.md with full template |
+| `5633974` | Fix model_loaded reference (turboindex://stats, not get_index_stats) |
+| `bab3bae` | Add condensed AGENTS.md block to README quick-start |
+| `8dc3a4a` | Fix keyword_search param name: ext/ext_filter → file_extension_filter |
+| `453e9bf` | Add real-world example transcript (refund bug fix scenario) |
+| `5c5d450` | Fix stale search_codebase latency: 200ms → 12ms |
+| `9df78e8` | Add FAQ section (8 questions) |
+| `248234b` | Fix FAQ accuracy: model load + file exclusion answers |
+
+### Key discoveries
+
+- **`keyword_search` parameter name was wrong across all docs.** Both `agents-guide.md`
+  (`ext_filter`) and `README.md` (`ext`) used wrong names — the actual parameter is
+  `file_extension_filter`. Fixed everywhere.
+- **`search_codebase` subsequent latency was stale.** `docs/usage.md` said ~200ms but
+  benchmarks show ~12ms — leftover from the old bge-small model. Fixed.
+- **The FAQ revealed a documentation gap:** stating that `search_codebase` returns
+  empty results during model load was wrong. The model loads *synchronously* during
+  the first search call — it's just slow (~5s), not empty. Corrected.
+- **Manually editing `meta.json`/`store.json` is fragile** as a file exclusion
+  workaround — the file gets re-added on next `index_directory`. Replaced with
+  honest answer: no per-file exclusion yet, use `.gitignore` workaround.
+
+### Decisions made
+
+| Decision | Rationale |
+|---|---|
+| **Copy-paste block format** | Users paste a single block into their AGENTS.md — no config or tool setup needed |
+| **Condensed README version** | Shorter block for quick-start; links to full guide for details |
+| **Real-world example** | Payment API refund bug — shows all 7 tools in realistic context |
+| **FAQ after real-world example** | Readers understand the workflow first, then get answers to questions |
+| **No per-file exclusion tool** | Documented limitation honestly instead of suggesting fragile hacks |
+
+### Open questions
+
+- Should the condensed AGENTS.md block also go into the template section of `docs/agents-guide.md`
+  as an alternative "lite" version?
+- Should we add a second real-world example for a different scenario (e.g., monorepo search)?
+- The FAQ revealed a feature gap (per-file exclusion) — should this be added to `docs/roadmap.md`?
+
+---
+
 ## Template for future entries
 
 ```markdown
