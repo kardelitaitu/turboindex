@@ -17,7 +17,6 @@
     "LICENSE"
   ],
   "scripts": {
-    "postinstall": "node ./scripts/setup.js",
     "test": "npm run test:py && npm run test:js",
     "test:all": "npm run test:py && npm run test:js && npm run test:integration",
     "test:py": "node scripts/run-python.js -m pytest tests/ -q",

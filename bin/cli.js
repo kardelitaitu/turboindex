@@ -111,11 +111,29 @@ function main(options = {}) {
         }
     }
 
-    // Check Python environment
+    // Check Python environment — run setup on first use
     if (!fsImpl.existsSync(pythonExecutable)) {
-        logFn('Python environment not found.');
-        logFn('Please run: npm install -g turboindex');
-        logFn('');
+        logFn('First run — setting up Python environment...');
+        logFn('(Subsequent runs will be instant)');
+        const setup = require('../scripts/setup.js');
+        const originalLog = console.log;
+        console.log = logFn;  // redirect setup banner/steps to stderr (MCP uses stdout)
+        try {
+            setup.main({
+                exit: (code) => exitFn(code),
+                log: logFn,
+                error: logFn,
+            });
+        } catch (e) {
+            logFn(`Setup failed: ${e.message}`);
+            exitFn(1);
+        } finally {
+            console.log = originalLog;
+        }
+    }
+
+    if (!fsImpl.existsSync(pythonExecutable)) {
+        logFn('Python environment not found after setup.');
         logFn(`Expected Python at: ${pythonExecutable}`);
         exitFn(1);
     }

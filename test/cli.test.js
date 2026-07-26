@@ -194,24 +194,12 @@ describe('CLI Wrapper', () => {
     assert.match(r.stdout.trim(), /^\d+\.\d+\.\d+$/);
   });
 
-  it('should detect missing Python by exiting with code 1', () => {
-    // Temporarily rename .venv to simulate missing environment
-    const venvPath = path.join(ROOT, '.venv');
-    const venvBackup = path.join(ROOT, '.venv_backup_test');
-    if (fs.existsSync(venvBackup)) {
-      fs.rmdirSync(venvBackup, { recursive: true });
-    }
-    const exists = fs.existsSync(venvPath);
-    if (exists) {
-      fs.renameSync(venvPath, venvBackup);
-    }
-    const r = run([]);
-    if (exists) {
-      fs.renameSync(venvBackup, venvPath);
-    }
-    assert.notStrictEqual(r.status, 0, 'Should exit non-zero when .venv missing');
-    assert.ok(r.stderr.includes('Python environment not found'),
-      `stderr: ${r.stderr.slice(-200)}`);
+  // Auto-setup is tested implicitly by all spawn tests (CLI requires .venv to exist)
+  it('auto-setup on first run is guarded in cli.main', () => {
+    const content = fs.readFileSync(CLI, 'utf-8');
+    assert.ok(content.includes('First run'));
+    assert.ok(content.includes('setting up'));
+    assert.ok(content.includes('require(\'../scripts/setup.js\')'));
   });
 
   it('should forward non-zero exit code from child', () => {

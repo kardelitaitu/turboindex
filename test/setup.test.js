@@ -58,7 +58,7 @@ describe('Setup Script', () => {
     );
     assert.ok(result.includes('fastmcp'));
     assert.ok(result.includes('turbovec'));
-    assert.ok(result.includes('sentence'));
+    assert.ok(result.includes('fastembed'));
     assert.ok(result.includes('numpy'));
   });
 
