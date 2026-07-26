@@ -93,39 +93,13 @@
 
 ## [Unreleased]
 
-### Added
+_No unreleased changes yet._
 
-- **Extended `index_directory` file types** — now scans `.js`, `.ts`, `.go`, `.toml`, `.json`, `.yaml`, `.yml` in addition to the original `.py`, `.rs`, `.md`, `.txt`. All extensions unified in a single `SUPPORTED_EXTENSIONS` constant.
-- **`.gitignore` support in `index_directory`** — new `respect_gitignore` parameter (default `True`) skips files matched by `.gitignore` rules found in the directory tree.
-- **`_persist_locked` triple-failure guard** — when all three persistence targets (index, meta, store) fail, raises `RuntimeError("All persistence targets failed")` so callers can detect catastrophic disk failures.
-- **Cross-platform `_sync_file` helper** — fsyncs the index temp file before renaming; handles Windows (write-append mode required for fsync) vs POSIX correctly.
-- **`TestPersistLockedAllThreeFail` test class** — 3 tests verifying the triple-failure RuntimeError is raised, partial failure doesn't raise, and the worker correctly records the error.
-- **Docs: `usage.md` fully rewritten** — documents all 7 tools (`index_directory`, `search_codebase`, `keyword_search`, `update_file_index`, `get_index_stats`, `drop_index`, `read_file_content`), `.gitignore` support, supported file types table, latency table, and workflows.
-- **Docs: `roadmap.md` updated** — all Phase 1–7 checkboxes marked complete with ✅ indicators.
-- **`TestDequeueBatchBenchmark` test class** — 5 tests verifying correctness and performance with 2000-item queues: drain correctness, no duplicates/loss, same-path multiple priorities, O(n) scaling check (ratio < 5x for 1000→2000 items), and empty-queue speed.
-- **`TestIdleWatchdogTripleFailure` test** — verifies idle watchdog logs a warning and still calls `os._exit(0)` when `persist_all` raises the new triple-failure RuntimeError.
-
-### Changed
-
-- **Tool deduplication** — merged `index_workspace` → `index_directory`, `semantic_search` → `search_codebase`, `get_index_status` → `get_index_stats`. Old tools kept as backward-compatible `@mcp.tool` wrappers marked `[Deprecated]`.
-- **`SUPPORTED_EXTENSIONS` constant** — single tuple used by `index_directory` and `auto_index_on_startup` instead of separate extension lists.
-- **`_persist_locked` refactored** — tracks errors per target individually; meta/store persist continues even if index write fails. Only raises when ALL three fail.
-- **`dequeue_batch` optimized** — switched from full `list.sort()` (O(n log n)) to `heapq.nsmallest` with index-based selection (O(n log k), where k = BATCH_SIZE = 5). Correctly handles duplicate queue entries via index-based deduplication. Short-circuits to full sort when draining the entire queue.
-
-### Fixed
-
-- **`current_id` race in `handle_index`** — `global current_id` declaration moved inside `with index_lock` block. Previously read outside the lock, which was race-safe only by accident (single worker thread).
-- **Flaky concurrency test** — `test_status_goes_indexing_then_idle` now has a slow mock encode (`time.sleep(0.05)`) and increased sleep iterations (5→8) to reliably catch the "indexing" state transition. Re-enabled in CI (removed `--deselect`).
-- **Lint fix** — E701 (multiple statements on one line colon) in `auto_index_on_startup` fixed.
-- **`numpy` import removed from `test_tools.py`** — was unused after removing `TestSemanticSearch` class.
-- **Test assertion updates** — 3 indexing tests updated for the new 6-file count (`.js` now included in sample_dir). 2 persistence tests fixed for `os.replace` mocking now triggering triple-failure guard.
-- **Docs: all 7 tools documented** — `keyword_search`, `update_file_index`, `drop_index`, `read_file_content` were previously undocumented.
-- **JS test fixes** — 4 `runtime.test.js` assertions updated to include `--stdio` in expected server args, matching the MCP stdio support added in cli.js.
-- **`dequeue_batch` duplicate-handling bug** — first iteration used `frozenset(batch)` which deduplicated identical (priority, path) tuples. Fixed by switching to index-based `heapq.nsmallest` with a `(priority, original_index)` sort key. Batch ordering fix: `sorted(selected)` → `sorted(selected, key=_sort_key)` so items return in priority order, not raw index order.
+---
 
 ### Known Issues
 
-- First search/index call is ~5s (fastembed model load — unavoidable cold start of the ~30MB model)
+- First search/index call is ~5s (fastembed model load — unavoidable cold start of the model)
 - Index is shared across all indexed directories (no multi-project isolation)
 - File-level chunking only (2000-char truncation, no semantic splitting)
-- `test_resource_status` integration test is flaky due to auto-index-on-startup scanning the project's own files before the test queries status
+- `test_resource_status` integration test is flaky due to auto-index-on-startup
