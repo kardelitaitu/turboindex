@@ -7,9 +7,9 @@ security vulnerability, please report it responsibly.
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Instead, please report security issues via email to the project maintainer:
+Instead, please use GitHub's private vulnerability reporting:
 
-**Email:** [security contact to be added]
+**[Report a vulnerability](https://github.com/kardelitaitu/turboindex/security/advisories/new)**
 
 ## What to Include
 
@@ -23,13 +23,11 @@ When reporting a vulnerability, please include as much of the following as possi
 
 ## What to Expect
 
-- **Acknowledgment:** You will receive an acknowledgment of your report within
-  48 hours.
-- **Triage:** The maintainer will triage the issue and determine severity and
-  scope.
-- **Resolution:** We aim to release a fix for critical vulnerabilities within
-  7 days. Non-critical issues will be addressed in the next release cycle.
-- **Disclosure:** We will coordinate disclosure with you. We prefer to release
+- **Acknowledgment:** You will receive an acknowledgment within a few days.
+- **Triage:** The maintainer will triage the issue and determine severity and scope.
+- **Resolution:** Critical fixes are prioritized for the next release.
+  Non-critical issues will be addressed in a future release cycle.
+- **Disclosure:** We will coordinate disclosure with you and prefer to release
   a fix before public disclosure.
 
 ## Scope
