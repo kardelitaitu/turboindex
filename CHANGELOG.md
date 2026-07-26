@@ -6,6 +6,16 @@
 
 ---
 
+## [1.0.2] — 2026-07-26
+
+### Changed
+
+- **Removed postinstall script** — venv setup now runs automatically on first `turboindex` run instead of at install time. No more `allow-scripts` warning. Users just run `npm install -g turboindex` and that's it.
+- **CLI auto-setup on first run** — when `.venv` is missing, `bin/cli.js` runs `scripts/setup.js` inline with all output redirected to stderr (keeps stdout clean for MCP protocol).
+- **README simplified** — back to single `npm install -g turboindex` command.
+
+---
+
 ## [1.0.1] — 2026-07-26
 
 ### Changed
