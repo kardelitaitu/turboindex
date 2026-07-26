@@ -341,7 +341,7 @@ Detailed statistics as a JSON document. Also lightweight — never loads the mod
 | `turboindex://stats` | < 1ms | < 1ms |
 | `get_index_stats()` | < 1ms | < 1ms |
 | `index_directory` (scan only) | ~50ms | ~50ms |
-| `search_codebase` | ~5s (model load) | ~200ms |
+| `search_codebase` | ~5s (model load) | ~12ms |
 | `update_file_index` | ~400ms | ~400ms |
 | `keyword_search` | < 10ms | < 10ms |
 | `read_file_content` | file size dependent | file size dependent |
