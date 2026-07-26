@@ -274,13 +274,16 @@ and kept the index fresh with `update_file_index` after edits.
 
 1. **You haven't indexed yet.** Call `index_directory("/your/project")` first.
    Indexing is async — check `get_index_stats()` to see if files are still queued.
-2. **The model hasn't loaded yet.** First `search_codebase` call loads the embedding
-   model (~5s). During that load, results can be empty. Check
-   `turboindex://stats` → `"model_loaded": true` to confirm.
-3. **Files are gitignored.** By default, `index_directory` respects `.gitignore`.
+2. **Files are gitignored.** By default, `index_directory` respects `.gitignore`.
    Pass `respect_gitignore=False` to index everything, or check your `.gitignore` rules.
+3. **The query genuinely matches nothing.** Try broader terms or use
+   `keyword_search` to verify the file exists in the index.
 
-**Quick fix:** Run `index_directory` + `get_index_stats` + wait a few seconds + retry search.
+**The first search is ~5s, but it won't be empty.** The model loads synchronously
+*during* the first `search_codebase` call — you'll get results, just with a delay.
+If results are truly empty, it's one of the three causes above.
+
+**Quick fix:** `index_directory` → `get_index_stats` (wait for idle) → retry search.
 
 ### Do I need to re-index after `git pull`?
 
@@ -358,9 +361,10 @@ Yes — two ways:
    in the directory tree. To index everything including gitignored files:
    `index_directory("/project", respect_gitignore=False)`
 
-2. **Remove a single file.** To remove a file from the index without touching
-   anything else, delete it from `~/.turboindex/meta.json` and `store.json`,
-   then restart the server.
+2. **Remove a single file.** There's no per-file exclusion tool yet — this is on
+   the roadmap. For now, the simplest workaround: add the file to `.gitignore`
+   and re-run `index_directory` (the file will be removed from the index on the
+   next scan).
 
 ---
 
