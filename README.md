@@ -1,22 +1,22 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/TurboCode-MCP-FF6B35?style=for-the-badge&logo=python&logoColor=white">
-  <img alt="TurboCode MCP" src="https://img.shields.io/badge/TurboCode-MCP-FF6B35?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="TurboIndex" src="https://img.shields.io/badge/TurboCode-MCP-FF6B35?style=for-the-badge&logo=python&logoColor=white">
 </picture>
 
-# TurboCode MCP
+# TurboIndex
 
 A **fully local** codebase vector search MCP server powered by [Turbovec](https://github.com/andrewm4894/turbovec).  
 Index your projects and search them semantically — no cloud, no data leaves your machine.
 
 ```bash
-npm install -g turbocode-mcp
+npm install -g turboindex
 ```
 
-[![npm version](https://img.shields.io/npm/v/turbocode-mcp.svg)](https://www.npmjs.com/package/turbocode-mcp)
+[![npm version](https://img.shields.io/npm/v/turboindex.svg)](https://www.npmjs.com/package/turboindex)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Node >=18](https://img.shields.io/badge/node->=18-green.svg)](https://nodejs.org)
 [![Python >=3.9](https://img.shields.io/badge/python->=3.9-blue.svg)](https://python.org)
-[![Tests: 662 passing](https://img.shields.io/badge/tests-662%20passing-brightgreen.svg)](https://github.com/anomalyco/turbocode-mcp)
+[![Tests: 662 passing](https://img.shields.io/badge/tests-662%20passing-brightgreen.svg)](https://github.com/anomalyco/turboindex)
 
 ---
 
@@ -25,20 +25,20 @@ npm install -g turbocode-mcp
 ### CPU (default)
 
 ```bash
-npm install -g turbocode-mcp
+npm install -g turboindex
 ```
 
 ### GPU (CUDA / DirectML / CoreML)
 
 ```bash
-npm install -g turbocode-mcp
+npm install -g turboindex
 # Install GPU-enabled ONNX Runtime inside the auto-created venv
-~/.turbocode/.venv/Scripts/pip install onnxruntime-gpu
+~/.turboindex/.venv/Scripts/pip install onnxruntime-gpu
 ```
 
 ### Configure
 
-TurboCode MCP works with any MCP-compatible agent. Below are setup instructions for popular clients.
+TurboIndex works with any MCP-compatible agent. Below are setup instructions for popular clients.
 
 | Client | Type | Config Method |
 |---|---|---|
@@ -49,15 +49,15 @@ TurboCode MCP works with any MCP-compatible agent. Below are setup instructions 
 | **Continue** | VS Code / JetBrains | `~/.continue/config.json` → `experimental.mcpServers` |
 | **Cline / Roo Code** | VS Code extension | `cline_mcp_settings.json` or `roo_mcp_settings.json` |
 | **Copilot** | VS Code / JetBrains | `~/.github/copilot-mcp.json` → `servers` |
-| **Aider** | CLI | `aider --mcp-servers turbocode-mcp` or `aider-mcp-chat` mode |
-| **Genkit / Goose** | CLI | `goose add mcp turbocode-mcp` or JSON config |
+| **Aider** | CLI | `aider --mcp-servers turboindex` or `aider-mcp-chat` mode |
+| **Genkit / Goose** | CLI | `goose add mcp turboindex` or JSON config |
 
 **Claude Desktop** (`claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
-    "turbocode-mcp": {
-      "command": "turbocode-mcp",
+    "turboindex": {
+      "command": "turboindex",
       "cwd": "."
     }
   }
@@ -68,8 +68,8 @@ TurboCode MCP works with any MCP-compatible agent. Below are setup instructions 
 ```json
 {
   "mcpServers": {
-    "turbocode-mcp": {
-      "command": "turbocode-mcp",
+    "turboindex": {
+      "command": "turboindex",
       "cwd": "."
     }
   }
@@ -81,8 +81,8 @@ TurboCode MCP works with any MCP-compatible agent. Below are setup instructions 
 {
   "experimental": {
     "mcpServers": {
-      "turbocode-mcp": {
-        "command": "turbocode-mcp",
+      "turboindex": {
+        "command": "turboindex",
         "cwd": "."
       }
     }
@@ -94,8 +94,8 @@ TurboCode MCP works with any MCP-compatible agent. Below are setup instructions 
 ```json
 {
   "mcpServers": {
-    "turbocode-mcp": {
-      "command": "turbocode-mcp",
+    "turboindex": {
+      "command": "turboindex",
       "cwd": "."
     }
   }
@@ -106,28 +106,28 @@ TurboCode MCP works with any MCP-compatible agent. Below are setup instructions 
 ```json
 {
   "servers": {
-    "turbocode-mcp": {
-      "command": "turbocode-mcp",
+    "turboindex": {
+      "command": "turboindex",
       "cwd": "."
     }
   }
 }
 ```
 
-**Cursor:** Settings → Features → MCP → Add Server → Name: `turbocode-mcp`, Type: `command`, Command: `turbocode-mcp`
+**Cursor:** Settings → Features → MCP → Add Server → Name: `turboindex`, Type: `command`, Command: `turboindex`
 
-**Aider:** `aider --mcp-servers turbocode-mcp` (or run `aider-mcp-chat` for an MCP-native session)
+**Aider:** `aider --mcp-servers turboindex` (or run `aider-mcp-chat` for an MCP-native session)
 
-**Genkit / Goose:** `goose add mcp turbocode-mcp`
+**Genkit / Goose:** `goose add mcp turboindex`
 
 **opencode** (`opencode.json`):
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "turbocode-mcp": {
+    "turboindex": {
       "type": "local",
-      "command": ["turbocode-mcp"],
+      "command": ["turboindex"],
       "cwd": ".",
       "enabled": true
     }
@@ -136,7 +136,7 @@ TurboCode MCP works with any MCP-compatible agent. Below are setup instructions 
 ```
 
 > **`"cwd": "."` tells the server to auto-index the project folder on startup.**  
-> The server scans files, diffs against the persisted index, and queues new/changed/removed files automatically — no manual `/turbocode index` needed. Omit or change the path to index a different directory.
+> The server scans files, diffs against the persisted index, and queues new/changed/removed files automatically — no manual `/turboindex index` needed. Omit or change the path to index a different directory.
 
 Your AI assistant can now index and search your local codebase. On startup, the server automatically indexes the `cwd` directory — no manual `index_directory` call required.
 
@@ -192,8 +192,8 @@ Your AI assistant can now index and search your local codebase. On startup, the 
 
 | Resource | What it shows |
 |---|---|
-| `turbocode://status` | `Idle. 47 files indexed.` |
-| `turbocode://stats` | JSON with vector count, disk usage, queue depth |
+| `turboindex://status` | `Idle. 47 files indexed.` |
+| `turboindex://stats` | JSON with vector count, disk usage, queue depth |
 
 ---
 
@@ -238,7 +238,7 @@ A native Rust port would replace the Python server + embed subprocess with a sin
 | **Keyword search** | ~0.08 ms | **~0.01 ms** | `memchr` over contiguous memory instead of Python string ops |
 | **Cold start** | ~5 ms | **~5 ms** | ONNX Runtime model load is the bottleneck (unchanged) |
 | **Process memory** | ~20 MB | **~5–8 MB** | Single binary, no Python interpreter, no subprocess |
-| **Dependency footprint** | Node.js + Python + .venv | **Single binary** | `cargo install turbocode-mcp`, no runtime deps |
+| **Dependency footprint** | Node.js + Python + .venv | **Single binary** | `cargo install turboindex`, no runtime deps |
 
 The real win of a Rust port is not raw speed — it's **consistency** (no GC pauses, no GIL contention under concurrent search), **simplicity** (one static binary), and **eliminating the Node.js + Python runtime dependency**.
 

@@ -1,6 +1,6 @@
 # Development Journal
 
-> A running log of decisions, discoveries, and progress on TurboCode MCP.
+> A running log of decisions, discoveries, and progress on TurboIndex.
 
 ---
 
@@ -24,11 +24,11 @@ We analyzed the viability, identified the core problems, and restructured everyt
 |---|---|
 | **Lazy loading** | Model and index load on first use, not startup. Server starts in ~100ms, resources never trigger load. |
 | **Background indexing** | 5-file batches with 1s interval via daemon thread. Tools return instantly. |
-| **Disk persistence** | `~/.turbocode/index.tvim` + `meta.json` + `store.json`. Persist after every batch. |
+| **Disk persistence** | `~/.turboindex/index.tvim` + `meta.json` + `store.json`. Persist after every batch. |
 | **Incremental indexing** | Compare mtimes against `meta.json`. Only embed new/changed files. |
 | **Stale re-indexing** | Idle worker re-embeds files older than 7 days. Random sampling (not full sort). |
 | **Idle shutdown** | 30-minute timeout. `os._exit(0)` — MCP client auto-restarts. |
-| **MCP Resources** | `turbocode://status` + `turbocode://stats`. Never load model/index. |
+| **MCP Resources** | `turboindex://status` + `turboindex://stats`. Never load model/index. |
 | **Two-lock strategy** | `queue_lock` + `index_lock`, never nested. I/O and CPU outside locks. |
 | **Atomic writes** | `os.replace()` with temp file. Prevents corruption on crash. |
 | **Cold-start recovery** | Rebuild `meta` from `store` if counts diverge. |
@@ -38,7 +38,7 @@ We analyzed the viability, identified the core problems, and restructured everyt
 
 - Should we support file-system watch mode (inotify/FSEvents) for auto-re-index?
 - What's the right chunking strategy beyond simple truncation?
-- Should the `.turbocode/` directory be configurable via CLI flag?
+- Should the `.turboindex/` directory be configurable via CLI flag?
 
 ---
 
@@ -51,7 +51,7 @@ Built the entire server in a single implementation pass following the roadmap:
 1. **Phase 1 — Scaffolding:** `package.json`, `scripts/setup.js`, `bin/cli.js`, `requirements.txt`. Tested via `npm link`
 2. **Phase 2 — Server Core:** Global state, lazy loading, atomic persistence, cold-start recovery, FastMCP registration.
 3. **Phase 3 — Background Worker:** Queue management, file indexing (I/O/CPU outside lock), file removal, stale detection.
-4. **Phase 4 — Resources & Shutdown:** `turbocode://status`, `turbocode://stats` resources, idle watchdog.
+4. **Phase 4 — Resources & Shutdown:** `turboindex://status`, `turboindex://stats` resources, idle watchdog.
 5. **Phase 5 — Integration Testing:** Full npm pipeline, persistence round-trip, edge cases.
 6. **Phase 6 — Polish:** CLI flags (`--help`, `--version`, `--debug`), signal handling, startup validation, documentation review.
 
@@ -245,7 +245,7 @@ Applied one real bug fix in `server.py` and expanded the test suite from 248 to 
 ### Open questions
 
 - Should the remaining content-based JS tests eventually be replaced with more direct runtime checks, or kept as lightweight implementation guardrails?
-- Would it be useful to add a small CLI smoke test that exercises the published `turbocode-mcp` command end-to-end from a temp workspace?
+- Would it be useful to add a small CLI smoke test that exercises the published `turboindex` command end-to-end from a temp workspace?
 
 ## 2026-07-25 — FIFO Guard, 31 New Tests, Full Suite at 671
 

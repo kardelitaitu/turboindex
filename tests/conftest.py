@@ -42,9 +42,9 @@ def clean_globals():
 def tmp_paths(tmp_path, monkeypatch):
     import server
 
-    d = tmp_path / ".turbocode"
+    d = tmp_path / ".turboindex"
     d.mkdir()
-    monkeypatch.setattr(server, "TURBOCODE_DIR", str(d))
+    monkeypatch.setattr(server, "TURBOINDEX_DIR", str(d))
     monkeypatch.setattr(server, "INDEX_PATH", str(d / "index.tvim"))
     monkeypatch.setattr(server, "META_PATH", str(d / "meta.json"))
     monkeypatch.setattr(server, "STORE_PATH", str(d / "store.json"))

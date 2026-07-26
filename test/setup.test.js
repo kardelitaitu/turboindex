@@ -145,7 +145,7 @@ describe('Setup Script', () => {
 
   it('should have proper error function for logging', () => {
     const content = fs.readFileSync(SETUP_SCRIPT, 'utf-8');
-    assert.ok(content.includes("console.error(`[turbocode-mcp] ERROR:"));
+    assert.ok(content.includes("console.error(`[turboindex] ERROR:"));
   });
 
   it('should detect Python 3.9+ correctly', () => {
@@ -190,7 +190,7 @@ describe('Setup Script', () => {
 
   it('should have log and error function distinction', () => {
     const content = fs.readFileSync(SETUP_SCRIPT, 'utf-8');
-    assert.ok(content.includes('console.error(`[turbocode-mcp] ERROR'));
-    assert.ok(content.includes('console.log(`[turbocode-mcp]'));
+    assert.ok(content.includes('console.error(`[turboindex] ERROR'));
+    assert.ok(content.includes('console.log(`[turboindex]'));
   });
 });

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * TurboCode MCP — Postinstall Setup Script
+ * TurboIndex — Postinstall Setup Script
  *
  * Creates an isolated Python virtual environment, installs pinned
- * dependencies, and installs the turbocode skill globally for opencode.
- * Runs automatically after `npm install -g turbocode-mcp`.
+ * dependencies, and installs the turboindex skill globally.
+ * Runs automatically after `npm install -g turboindex`.
  */
 
 const { execSync } = require('child_process');
@@ -17,15 +17,15 @@ const ROOT_DIR = path.join(__dirname, '..');
 const VENV_DIR = path.join(ROOT_DIR, '.venv');
 const REQUIREMENTS = path.join(ROOT_DIR, 'requirements.txt');
 const IS_WIN = process.platform === 'win32';
-const SKILL_SRC = path.join(ROOT_DIR, 'skills', 'turbocode');
-const SKILL_DEST = path.join(os.homedir(), '.agents', 'skills', 'turbocode');
+const SKILL_SRC = path.join(ROOT_DIR, 'skills', 'turboindex');
+const SKILL_DEST = path.join(os.homedir(), '.agents', 'skills', 'turboindex');
 
 function log(msg) {
-    console.log(`[turbocode-mcp] ${msg}`);
+    console.log(`[turboindex] ${msg}`);
 }
 
 function error(msg) {
-    console.error(`[turbocode-mcp] ERROR: ${msg}`);
+    console.error(`[turboindex] ERROR: ${msg}`);
 }
 
 function run(cmd, opts = {}, deps = {}) {
@@ -88,7 +88,7 @@ function installSkill(fsImpl, logFn, errorFn, srcDir, destDir) {
         }
 
         fsImpl.writeFileSync(destFile, content, 'utf8');
-        logFn(`Installed turbocode skill -> ${destFile}`);
+        logFn(`Installed turboindex skill -> ${destFile}`);
     } catch (err) {
         errorFn(`Failed to install skill: ${err.message}`);
     }

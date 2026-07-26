@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * TurboCode MCP — Node.js CLI Wrapper
+ * TurboIndex — Node.js CLI Wrapper
  *
- * Entry point for the `turbocode-mcp` command.
+ * Entry point for the `turboindex` command.
  * Locates the Python virtual environment, spawns the MCP server,
  * and forwards stdio bidirectionally.
  */
@@ -23,7 +23,7 @@ const PYTHON_EXECUTABLE = IS_WIN
 const SERVER_SCRIPT = path.join(ROOT_DIR, 'src', 'server.py');
 
 function log(msg) {
-    console.error(`[turbocode-mcp] ${msg}`);
+    console.error(`[turboindex] ${msg}`);
 }
 
 function getVersion() {
@@ -37,13 +37,13 @@ function getVersion() {
 function printHelp() {
     const version = getVersion();
     console.log(`
-TurboCode MCP v${version}
+TurboIndex v${version}
 
 A fully local codebase vector search MCP server powered by Turbovec.
 Zero cloud dependencies — everything runs on your machine.
 
 USAGE:
-    turbocode-mcp [OPTIONS]
+    turboindex [OPTIONS]
 
 OPTIONS:
     --help              Print this help message and exit
@@ -53,24 +53,24 @@ OPTIONS:
     --workspace=<path>  Directory to auto-index on startup (default: auto-detect)
 
 EXAMPLES:
-    turbocode-mcp
+    turboindex
         Start the MCP server (connects via stdio to your MCP client).
 
-    turbocode-mcp --debug
+    turboindex --debug
         Start the server with verbose debug logging.
 
     CONFIGURATION:
     Add to Claude Desktop (claude_desktop_config.json):
     {
         "mcpServers": {
-            "turbocode-mcp": {
-                "command": "turbocode-mcp"
+            "turboindex": {
+                "command": "turboindex"
             }
         }
     }
 
 DOCUMENTATION:
-    https://github.com/kardelitaitu/turbocode-mcp
+    https://github.com/kardelitaitu/turboindex
 `.trim());
 }
 
@@ -114,7 +114,7 @@ function main(options = {}) {
     // Check Python environment
     if (!fsImpl.existsSync(pythonExecutable)) {
         logFn('Python environment not found.');
-        logFn('Please run: npm install -g turbocode-mcp');
+        logFn('Please run: npm install -g turboindex');
         logFn('');
         logFn(`Expected Python at: ${pythonExecutable}`);
         exitFn(1);

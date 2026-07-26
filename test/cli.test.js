@@ -126,7 +126,7 @@ describe('CLI Wrapper', () => {
     });
     await killed;
     assert.ok(
-      stderrData.includes('Ready.') || stderrData.includes('[turbocode-mcp]'),
+      stderrData.includes('Ready.') || stderrData.includes('[turboindex]'),
       `No expected output in stderr: ${stderrData.slice(-200)}`
     );
   });
@@ -137,14 +137,14 @@ describe('CLI Wrapper', () => {
     assert.match(version, /^\d+\.\d+\.\d+$/);
   });
 
-  it('cli.log prefixes output with [turbocode-mcp]', () => {
+  it('cli.log prefixes output with [turboindex]', () => {
     const cli = require('../bin/cli.js');
     const logs = [];
     const originalError = console.error;
     console.error = (msg) => logs.push(msg);
     try {
       cli.log('test message');
-      assert.ok(logs[0].includes('[turbocode-mcp]'));
+      assert.ok(logs[0].includes('[turboindex]'));
     } finally {
       console.error = originalError;
     }
@@ -286,7 +286,7 @@ describe('CLI Wrapper', () => {
       setTimeout(() => { proc.kill(); resolve(); }, 10000);
     });
     await killed;
-    assert.ok(stderrData.includes('Ready.') || stderrData.includes('[turbocode-mcp]'),
+    assert.ok(stderrData.includes('Ready.') || stderrData.includes('[turboindex]'),
       `stderr was: ${stderrData.slice(-200)}`);
   });
 
@@ -315,7 +315,7 @@ describe('CLI Wrapper', () => {
     });
     await killed;
     assert.ok(
-      stderrData.includes('Ready.') || stderrData.includes('[turbocode-mcp]'),
+      stderrData.includes('Ready.') || stderrData.includes('[turboindex]'),
       `No expected output: ${stderrData.slice(-200)}`
     );
   });
@@ -345,7 +345,7 @@ describe('CLI Wrapper', () => {
 
   it('should have log function printing to stderr', () => {
     const content = fs.readFileSync(CLI, 'utf-8');
-    assert.ok(content.includes("console.error(`[turbocode-mcp]"));
+    assert.ok(content.includes("console.error(`[turboindex]"));
   });
 
   it('should forward child env to preserve PATH', () => {

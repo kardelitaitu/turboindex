@@ -1,5 +1,5 @@
 """
-TurboCode MCP — Local codebase vector search MCP server.
+TurboIndex — Local codebase vector search MCP server.
 
 Powered by FastMCP, Turbovec, and fastembed.
 Fully local, no cloud, no API keys.
@@ -29,10 +29,10 @@ from turbovec import IdMapIndex
 # Phase 2.1 — Constants & Global State
 # ═══════════════════════════════════════════════════════════════
 
-TURBOCODE_DIR = os.path.join(os.path.expanduser("~"), ".turbocode")
-INDEX_PATH = os.path.join(TURBOCODE_DIR, "index.tvim")
-META_PATH = os.path.join(TURBOCODE_DIR, "meta.json")
-STORE_PATH = os.path.join(TURBOCODE_DIR, "store.json")
+TURBOINDEX_DIR = os.path.join(os.path.expanduser("~"), ".turboindex")
+INDEX_PATH = os.path.join(TURBOINDEX_DIR, "index.tvim")
+META_PATH = os.path.join(TURBOINDEX_DIR, "meta.json")
+STORE_PATH = os.path.join(TURBOINDEX_DIR, "store.json")
 
 BATCH_SIZE = 5
 BATCH_INTERVAL = 1.0  # seconds
@@ -108,13 +108,13 @@ DEBUG_MODE = False
 
 def log(msg: str) -> None:
     """Log a message to stderr. stdout is reserved for MCP protocol."""
-    print(f"[TurboCode MCP] {msg}", file=sys.stderr, flush=True)
+    print(f"[TurboIndex] {msg}", file=sys.stderr, flush=True)
 
 
 def debug(msg: str) -> None:
     """Log a debug message to stderr (only when --debug is enabled)."""
     if DEBUG_MODE:
-        print(f"[TurboCode MCP] [DEBUG] {msg}", file=sys.stderr, flush=True)
+        print(f"[TurboIndex] [DEBUG] {msg}", file=sys.stderr, flush=True)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -264,7 +264,7 @@ def validate_imports() -> None:
 
     if missing:
         log(f"ERROR: Missing required Python packages: {', '.join(missing)}")
-        log("Please reinstall: npm install -g turbocode-mcp")
+        log("Please reinstall: npm install -g turboindex")
         sys.exit(1)
 
 
@@ -349,9 +349,9 @@ def _persist_locked() -> None:
 def persist_all() -> None:
     """Save index, meta, and store to disk atomically."""
     try:
-        os.makedirs(TURBOCODE_DIR, exist_ok=True)
+        os.makedirs(TURBOINDEX_DIR, exist_ok=True)
     except Exception as e:
-        log(f"WARNING: Cannot create {TURBOCODE_DIR}: {e}")
+        log(f"WARNING: Cannot create {TURBOINDEX_DIR}: {e}")
         return
 
     with index_lock:
@@ -716,7 +716,7 @@ def idle_watchdog() -> None:
 # Phase 2.6 — FastMCP Registration
 # ═══════════════════════════════════════════════════════════════
 
-mcp = FastMCP("TurboCode MCP")
+mcp = FastMCP("TurboIndex")
 
 
 # ── Helpers ──
@@ -1091,7 +1091,7 @@ def read_file_content(file_path: str) -> str:
 # ── Resources ──
 
 
-@mcp.resource("turbocode://status")
+@mcp.resource("turboindex://status")
 def index_status() -> str:
     """Current indexer status. Lightweight — no model/index load."""
     touch()
@@ -1107,7 +1107,7 @@ def index_status() -> str:
         return f"Idle. {worker_state['processed']} files indexed."
 
 
-@mcp.resource("turbocode://stats")
+@mcp.resource("turboindex://stats")
 def index_stats() -> str:
     """Detailed index statistics as JSON. Lightweight — no model/index load."""
     touch()
@@ -1261,9 +1261,9 @@ def main() -> None:
     validate_environment()
 
     try:
-        os.makedirs(TURBOCODE_DIR, exist_ok=True)
+        os.makedirs(TURBOINDEX_DIR, exist_ok=True)
     except Exception as e:
-        log(f"WARNING: Cannot create {TURBOCODE_DIR}: {e}")
+        log(f"WARNING: Cannot create {TURBOINDEX_DIR}: {e}")
 
     # Clean up stale .tmp files from previous crashes
     for stale_tmp in [INDEX_PATH + ".tmp", META_PATH + ".tmp", STORE_PATH + ".tmp"]:
@@ -1311,7 +1311,7 @@ def main() -> None:
         except Exception as e:
             log(f"WARNING: Failed to preload resources: {e}")
 
-    debug(f"TURBOCODE_DIR={TURBOCODE_DIR}")
+    debug(f"TURBOINDEX_DIR={TURBOINDEX_DIR}")
     debug(f"INDEX_PATH={INDEX_PATH}")
     debug(f"meta count={len(meta)}, store count={len(store)}")
 

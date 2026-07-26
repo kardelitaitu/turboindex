@@ -1,15 +1,15 @@
 # AGENTS.md — Guide for AI Coding Agents
 
-> This file helps AI agents (Claude, Cursor, ZCode, etc.) understand the TurboCode MCP project
+> This file helps AI agents (Claude, Cursor, ZCode, etc.) understand the TurboIndex project
 > so they can contribute effectively. Read this first before making changes.
 
 ---
 
 ## Project Overview
 
-TurboCode MCP is a **globally-installable npm package** that provides a local codebase vector search MCP server.
+TurboIndex is a **globally-installable npm package** that provides a local codebase vector search MCP server.
 
-**Core idea:** `npm install -g turbocode-mcp` → an AI assistant can index and semantically search your codebase, fully local, no cloud.
+**Core idea:** `npm install -g turboindex` → an AI assistant can index and semantically search your codebase, fully local, no cloud.
 
 ---
 
@@ -28,9 +28,9 @@ TurboCode MCP is a **globally-installable npm package** that provides a local co
 ## Project Structure
 
 ```
-turbocode-mcp/
+turboindex/
 │
-├── bin/cli.js                 # Node.js CLI wrapper (entry point when user runs `turbocode-mcp`)
+├── bin/cli.js                 # Node.js CLI wrapper (entry point when user runs `turboindex`)
 ├── scripts/setup.js           # npm postinstall hook — creates .venv, pip installs deps
 ├── src/server.py              # Python MCP server (main logic lives here)
 │
@@ -42,7 +42,7 @@ turbocode-mcp/
 │   ├── reference.md           # Technical implementation details
 │   └── roadmap.md             # Development stages & backlog
 │
-├── ~/.turbocode/                # Created at runtime (in user home, git-ignored)
+├── ~/.turboindex/                # Created at runtime (in user home, git-ignored)
 │   ├── index.tvim             # Serialized turbovec index
 │   ├── meta.json              # File tracking (path → id, mtime, last_indexed)
 │   └── store.json             # Chunk text content (id → path, content)
@@ -105,7 +105,7 @@ store = {}            # Loaded at startup (small JSON)
 ```
 
 - `fastembed` is **imported inside `ensure_model()`**, not at module level — this keeps cold startup under 0.5s instead of ~10s.
-- `get_index_stats()` and `turbocode://status`/`turbocode://stats` must **never** trigger a model or index load
+- `get_index_stats()` and `turboindex://status`/`turboindex://stats` must **never** trigger a model or index load
 - Only `search_codebase()` and `index_directory()` call `ensure_resources()`
 
 ### 4. Thread safety — Two independent locks (never nest)
@@ -234,8 +234,8 @@ with index_lock:
 
 | URI | Returns | Loads Model? |
 |---|---|---|
-| `turbocode://status` | Human-readable status | **No** |
-| `turbocode://stats` | JSON document | **No** |
+| `turboindex://status` | Human-readable status | **No** |
+| `turboindex://stats` | JSON document | **No** |
 
 ---
 
@@ -260,7 +260,7 @@ fastmcp dev server.py
 
 # Test the full npm pipeline
 npm link                          # Simulates global install
-turbocode-mcp                     # Should launch the server
+turboindex                     # Should launch the server
 ```
 
 The server communicates over **stdio** using JSON-RPC 2.0. The FastMCP framework handles all protocol details — you just register tools and resources with decorators.

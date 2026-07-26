@@ -9,16 +9,16 @@
 Install the package globally via npm:
 
 ```bash
-npm install -g turbocode-mcp
+npm install -g turboindex
 ```
 
 This command does three things:
 
-1. Downloads the `turbocode-mcp` package
+1. Downloads the `turboindex` package
 2. Runs the **postinstall script**, which:
    - Creates an isolated Python virtual environment at `.venv/`
    - Installs `fastmcp`, `turbovec`, `fastembed`, and `numpy`
-3. Makes the `turbocode-mcp` command available on your PATH
+3. Makes the `turboindex` command available on your PATH
 
 No manual `pip install` or `python -m venv` required.
 
@@ -28,11 +28,11 @@ No manual `pip install` or `python -m venv` required.
 
 ```bash
 # Check that the command exists
-which turbocode-mcp          # Linux/Mac
-where turbocode-mcp          # Windows
+which turboindex          # Linux/Mac
+where turboindex          # Windows
 
 # Check npm global packages
-npm list -g turbocode-mcp
+npm list -g turboindex
 ```
 
 ---
@@ -46,8 +46,8 @@ Edit your `claude_desktop_config.json` (usually at `~/Library/Application Suppor
 ```json
 {
   "mcpServers": {
-    "turbocode-mcp": {
-      "command": "turbocode-mcp"
+    "turboindex": {
+      "command": "turboindex"
     }
   }
 }
@@ -59,9 +59,9 @@ Restart Claude Desktop. The server starts automatically — you'll see the tools
 
 1. Open Cursor Settings → Features → MCP
 2. Add a new MCP server:
-   - **Name:** `turbocode-mcp`
+   - **Name:** `turboindex`
    - **Type:** `command`
-   - **Command:** `turbocode-mcp`
+   - **Command:** `turboindex`
 3. The server connects via stdio. Tools appear in the AI chat panel.
 
 ### ZCode / Other MCP Clients
@@ -71,8 +71,8 @@ Most MCP clients use the same pattern:
 ```json
 {
   "mcpServers": {
-    "turbocode-mcp": {
-      "command": "turbocode-mcp"
+    "turboindex": {
+      "command": "turboindex"
     }
   }
 }
@@ -83,9 +83,9 @@ If your client needs the full path:
 ```json
 {
   "mcpServers": {
-    "turbocode-mcp": {
+    "turboindex": {
       "command": "node",
-      "args": ["/path/to/turbocode-mcp/bin/cli.js"]
+      "args": ["/path/to/turboindex/bin/cli.js"]
     }
   }
 }
@@ -99,10 +99,10 @@ Once connected, here's the typical flow:
 
 ### 1. The AI sees index status automatically
 
-The client loads `turbocode://status` and `turbocode://stats` into the AI's context automatically. You'll see something like:
+The client loads `turboindex://status` and `turboindex://stats` into the AI's context automatically. You'll see something like:
 
 ```
-turbocode://status → Ready. 0 files tracked. (Model loaded on demand)
+turboindex://status → Ready. 0 files tracked. (Model loaded on demand)
 ```
 
 ### 2. Index a project directory
@@ -142,7 +142,7 @@ You can search immediately — results are partial until all files are indexed:
 ## CLI Reference
 
 ```
-turbocode-mcp [OPTIONS]
+turboindex [OPTIONS]
 ```
 
 | Flag | Description |
@@ -171,8 +171,8 @@ turbocode-mcp [OPTIONS]
 
 | Problem | Likely Cause | Solution |
 |---|---|---|
-| `command not found: turbocode-mcp` | npm global bin not on PATH | Run `npm install -g turbocode-mcp` again; check `npm root -g` |
-| Server starts but tools error | Python venv failed | Delete `.venv/` and reinstall: `npm install -g turbocode-mcp` |
+| `command not found: turboindex` | npm global bin not on PATH | Run `npm install -g turboindex` again; check `npm root -g` |
+| Server starts but tools error | Python venv failed | Delete `.venv/` and reinstall: `npm install -g turboindex` |
 | First search is slow (~5s) | Model loading | Normal — model is cached for subsequent calls |
 | Server exits after idle | Watchdog timeout | Normal — client auto-restarts |
 | Index is empty after restart | Persistence directory deleted | Re-run `index_directory` |

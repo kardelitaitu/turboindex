@@ -1,7 +1,9 @@
 """Replace json.dump(x, open(p, 'w')) with proper with-blocks across all test files."""
-import re, os, glob
+import glob
+import os
+import re
 
-base = r'C:\My Script\turbocode-mcp\tests'
+base = r'C:\My Script\turboindex\tests'
 
 # Pattern: json.dump(EXPR, open(PATH, MODE_OPTIONAL))
 # We replace with: with open(PATH, MODE) as f: json.dump(EXPR, f)
@@ -23,7 +25,7 @@ def fix_line(line):
 for fpath in sorted(glob.glob(os.path.join(base, 'test_*.py'))):
     with open(fpath) as f:
         content = f.read()
-    
+
     lines = content.split('\n')
     new_lines = []
     changes = 0
@@ -32,7 +34,7 @@ for fpath in sorted(glob.glob(os.path.join(base, 'test_*.py'))):
         if fixed != line:
             changes += 1
         new_lines.append(fixed)
-    
+
     if changes:
         with open(fpath, 'w') as f:
             f.write('\n'.join(new_lines))

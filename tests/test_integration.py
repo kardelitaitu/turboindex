@@ -69,14 +69,14 @@ class TestMCPProtocol:
                 "params": {
                     "protocolVersion": "2024-11-05",
                     "capabilities": {},
-                    "clientInfo": {"name": "turbocode-test", "version": "1.0"},
+                    "clientInfo": {"name": "turboindex-test", "version": "1.0"},
                 },
             },
         )
         resp = _recv(mcp_server.stdout)
         assert resp["jsonrpc"] == "2.0"
         assert "result" in resp
-        assert resp["result"]["serverInfo"]["name"] == "TurboCode MCP"
+        assert resp["result"]["serverInfo"]["name"] == "TurboIndex"
 
     def test_initialized_notification(self, mcp_server):
         _send(
@@ -154,8 +154,8 @@ class TestMCPProtocol:
         assert resp["jsonrpc"] == "2.0"
         resources = resp["result"]["resources"]
         uris = [r["uri"] for r in resources]
-        assert "turbocode://status" in uris
-        assert "turbocode://stats" in uris
+        assert "turboindex://status" in uris
+        assert "turboindex://stats" in uris
 
     def test_resource_status(self, mcp_server):
         _send(
@@ -164,7 +164,7 @@ class TestMCPProtocol:
                 "jsonrpc": "2.0",
                 "id": _next_id(),
                 "method": "resources/read",
-                "params": {"uri": "turbocode://status"},
+                "params": {"uri": "turboindex://status"},
             },
         )
         resp = _recv(mcp_server.stdout)
@@ -180,7 +180,7 @@ class TestMCPProtocol:
                 "jsonrpc": "2.0",
                 "id": _next_id(),
                 "method": "resources/read",
-                "params": {"uri": "turbocode://stats"},
+                "params": {"uri": "turboindex://stats"},
             },
         )
         resp = _recv(mcp_server.stdout)
@@ -281,7 +281,7 @@ class TestMCPProtocol:
                 "jsonrpc": "2.0",
                 "id": _next_id(),
                 "method": "resources/read",
-                "params": {"uri": "turbocode://status"},
+                "params": {"uri": "turboindex://status"},
             },
         )
         resp = _recv(mcp_server.stdout)

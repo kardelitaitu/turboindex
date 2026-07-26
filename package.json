@@ -1,10 +1,10 @@
 {
-  "name": "turbocode-mcp",
+  "name": "turboindex",
   "version": "1.0.0",
   "description": "Local codebase vector search MCP server powered by Turbovec — fully local, no cloud, no API keys",
   "main": "bin/cli.js",
   "bin": {
-    "turbocode-mcp": "./bin/cli.js"
+    "turboindex": "./bin/cli.js"
   },
   "files": [
     "bin/",

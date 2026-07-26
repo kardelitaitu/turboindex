@@ -1,6 +1,6 @@
 # Technical Reference
 
-> Implementation details, APIs, and edge cases for TurboCode MCP.
+> Implementation details, APIs, and edge cases for TurboIndex.
 > This document is intended for developers contributing to or extending the server.
 
 ---
@@ -25,7 +25,7 @@ import sys
 
 def log(msg: str):
     """Log a message to stderr (stdout is reserved for MCP protocol)."""
-    print(f"[TurboCode MCP] {msg}", file=sys.stderr, flush=True)
+    print(f"[TurboIndex] {msg}", file=sys.stderr, flush=True)
 ```
 
 Use `log()` everywhere instead of `print()` for status messages, warnings, and errors.
@@ -121,8 +121,8 @@ def ensure_resources():
 
 | Operation | Loads Model | Loads Index | Latency |
 |---|---|---|---|
-| `turbocode://status` | No | No | < 1ms |
-| `turbocode://stats` | No | No | < 1ms |
+| `turboindex://status` | No | No | < 1ms |
+| `turboindex://stats` | No | No | < 1ms |
 | `get_index_stats()` | No | No | < 1ms |
 | `index_directory()` | Yes (first call) | Yes (first call) | +~5s first time |
 | `search_codebase()` | Yes (first call) | Yes (first call) | +~5s first time |
@@ -374,7 +374,7 @@ def atomic_write(path: str, data: str):
 
 def persist_all():
     """Save index, meta, and store to disk atomically."""
-    os.makedirs(TURBOCODE_DIR, exist_ok=True)
+    os.makedirs(TURBOINDEX_DIR, exist_ok=True)
     
     with index_lock:
         # Write index to tmp then rename
@@ -579,7 +579,7 @@ def get_index_stats() -> str:
 Resources never trigger model or index loading.
 
 ```python
-@mcp.resource("turbocode://status")
+@mcp.resource("turboindex://status")
 def index_status() -> str:
     """Current indexer status. Lightweight — no model/index load."""
     touch()
@@ -596,7 +596,7 @@ def index_status() -> str:
             return f"✅ Idle. {worker_state['processed']} files indexed."
 
 
-@mcp.resource("turbocode://stats")
+@mcp.resource("turboindex://stats")
 def index_stats() -> str:
     """Detailed index statistics. Lightweight — no model/index load."""
     touch()
@@ -634,7 +634,7 @@ def index_stats() -> str:
 def main():
     global meta, store, current_id
     
-    os.makedirs(TURBOCODE_DIR, exist_ok=True)
+    os.makedirs(TURBOINDEX_DIR, exist_ok=True)
     
     # Load and verify consistency of persisted data
     load_and_verify()

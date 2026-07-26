@@ -1,4 +1,4 @@
-# TurboCode MCP — Roadmap
+# TurboIndex — Roadmap
 
 > Development stages with granular tasks, testing checklists, and acceptance criteria.
 > Each phase includes implementation tasks followed by verification tests.
@@ -12,7 +12,7 @@
 ### 1.1 — `package.json`
 
 - [x] Define `name`, `version`, `description`, `author`, `license`
-- [x] Set `"bin": { "turbocode-mcp": "./bin/cli.js" }`
+- [x] Set `"bin": { "turboindex": "./bin/cli.js" }`
 - [x] Set `"scripts": { "postinstall": "node ./scripts/setup.js" }`
 - [x] Add `"engines": { "node": ">=18" }`
 - [x] Add `"keywords": ["mcp", "turbovec", "rag", "codebase"]`
@@ -49,15 +49,15 @@
 - [x] Forward child process exit code to parent
 - [x] Handle `SIGINT`/`SIGTERM` gracefully (kill Python child)
 
-**Acceptance:** ✅ Running `turbocode-mcp` spawns the Python server
+**Acceptance:** ✅ Running `turboindex` spawns the Python server
 
 ### 1.5 — Phase 1 Tests
 
 - [x] **Clean install:** `npm install -g .` → no errors, `.venv/` created
 - [x] **Reinstall idempotent:** Run install again → no duplicate `.venv` errors
 - [x] **Python missing:** Temporarily remove Python from PATH → clear error message
-- [x] **Command exists:** `which turbocode-mcp` (or `where`) → finds the binary
-- [x] **Server starts:** `turbocode-mcp` → Python process starts, waits for stdio
+- [x] **Command exists:** `which turboindex` (or `where`) → finds the binary
+- [x] **Server starts:** `turboindex` → Python process starts, waits for stdio
 - [x] **Server stops:** Ctrl+C → process exits cleanly
 
 ---
@@ -68,7 +68,7 @@
 
 ### 2.1 — Global State & Constants
 
-- [x] Define `TURBOCODE_DIR = os.path.expanduser("~/.turbocode")`
+- [x] Define `TURBOINDEX_DIR = os.path.expanduser("~/.turboindex")`
 - [x] Define `INDEX_PATH`, `META_PATH`, `STORE_PATH`
 - [x] Declare globals: `model = None`, `index = None`, `meta = {}`, `store = {}`
 - [x] Declare globals: `current_id = 0`, `last_activity = time.time()`
@@ -115,7 +115,7 @@
 
 ### 2.6 — FastMCP Registration
 
-- [x] `mcp = FastMCP("TurboCode MCP")`
+- [x] `mcp = FastMCP("TurboIndex")`
 - [x] Register all 3 tools and 2 resources
 - [x] `mcp.run()` starts the stdio JSON-RPC listener
 
@@ -129,7 +129,7 @@
 - [x] **Persistence round-trip:** Index a file, restart server, search → results found
 - [x] **Atomic write:** Kill process during `persist_all()` → `.tvim` not corrupt
 - [x] **Recovery:** Delete `meta.json` → server rebuilds it from `store.json`
-- [x] **Clean start:** Delete all `.turbocode/` → server starts fresh, no errors
+- [x] **Clean start:** Delete all `.turboindex/` → server starts fresh, no errors
 
 ---
 
@@ -234,7 +234,7 @@
 
 > **Goal:** Resources provide auto-context for the AI. Server shuts down after inactivity. ✅ **Complete**
 
-### 4.1 — `turbocode://status` Resource
+### 4.1 — `turboindex://status` Resource
 
 - [x] `touch()` at start
 - [x] Check `model` and `index` state (no load trigger)
@@ -243,7 +243,7 @@
 
 **Acceptance:** ✅ Resource returns in < 1ms regardless of index size
 
-### 4.2 — `turbocode://stats` Resource
+### 4.2 — `turboindex://stats` Resource
 
 - [x] `touch()` at start
 - [x] Return JSON: `vectors`, `files_tracked`, `directories`, `disk_size_kb`, `queue_depth`, `state`, `model_loaded`, `model`
@@ -263,8 +263,8 @@
 
 ### 4.4 — Phase 4 Tests
 
-- [x] **Status returns:** `turbocode://status` works before any tool call (no model load)
-- [x] **Stats returns:** `turbocode://stats` returns valid JSON with correct counts
+- [x] **Status returns:** `turboindex://status` works before any tool call (no model load)
+- [x] **Stats returns:** `turboindex://stats` returns valid JSON with correct counts
 - [x] **Status updates:** After indexing, status shows "Idle. N files indexed."
 - [x] **Touch resets timer:** Calling a tool mid-countdown → timer resets, no shutdown
 - [x] **Shutdown fires:** Wait full timeout → `os._exit(0)` called
@@ -281,13 +281,13 @@
 
 - [x] `npm link` → global install succeeds
 - [x] `.venv/` created in the package directory
-- [x] `turbocode-mcp` command exists on PATH
-- [x] Running `turbocode-mcp` starts the server
+- [x] `turboindex` command exists on PATH
+- [x] Running `turboindex` starts the server
 - [x] Server shows: "Ready. 0 files tracked. Model/index loaded on demand."
 
 ### 5.2 — End-to-End Workflow
 
-- [x] Server starts, `turbocode://status` returns instantly
+- [x] Server starts, `turboindex://status` returns instantly
 - [x] `index_directory` on a real project (e.g. this repo) returns within 100ms
 - [x] Background worker processes files, status updates show progress
 - [x] `search_codebase` on first call takes ~5s (model load)
@@ -364,7 +364,7 @@
 
 ### 7.3 — Post-Publish
 
-- [x] `npm install -g turbocode-mcp` from a clean machine → works
+- [x] `npm install -g turboindex` from a clean machine → works
 - [x] Connect to Claude Desktop → tools appear
 - [x] Index a real project → search works
 - [x] Restart client → persistence works
@@ -393,6 +393,6 @@
 ### Reliability
 
 - [ ] Periodic health check resource (uptime, memory usage, error rate)
-- [ ] Index repair tool (`turbocode-mcp --repair`)
+- [ ] Index repair tool (`turboindex --repair`)
 - [ ] Automatic backup of `.tvim` before destructive writes
 - [ ] Telemetry (opt-in, anonymous, basic stats only)

@@ -1,10 +1,10 @@
-# TurboCode MCP — Documentation
+# TurboIndex — Documentation
 
 > **Version:** 1.0.0  
-> **Package:** `turbocode-mcp`  
+> **Package:** `turboindex`  
 > **License:** MIT
 
-TurboCode MCP is a **fully local** codebase vector search server for the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). It connects your AI coding assistant to your local codebase via semantic search — no cloud, no API keys, no data leaves your machine.
+TurboIndex is a **fully local** codebase vector search server for the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). It connects your AI coding assistant to your local codebase via semantic search — no cloud, no API keys, no data leaves your machine.
 
 ---
 
@@ -25,12 +25,12 @@ TurboCode MCP is a **fully local** codebase vector search server for the [Model 
 | Feature | Description |
 |---|---|
 | **🔒 100% Local** | Embeddings, indexing, and search all happen on your machine |
-| **💾 Disk-Persistent** | Index saved to `.turbocode/`, survives restarts |
+| **💾 Disk-Persistent** | Index saved to `.turboindex/`, survives restarts |
 | **⏳ Background Indexing** | Tools return instantly; files processed in batches by a background worker |
 | **🪶 Lazy Loading** | Server starts in ~100ms; the heavy ML model loads only on first search |
 | **💤 Auto-Shutdown** | Exits after 30 idle minutes to free RAM; client auto-restarts on next call |
 | **🔄 Self-Maintaining** | Idle worker re-indexes stale files automatically |
-| **📦 One-Command Install** | `npm install -g turbocode-mcp` sets up everything |
+| **📦 One-Command Install** | `npm install -g turboindex` sets up everything |
 
 ---
 
@@ -50,7 +50,7 @@ MCP Client ──stdio──► bin/cli.js ──spawns──► src/server.py
                                           │  Watchdog    │
                                           └──────┬──────┘
                                                  │
-                                          .turbocode/
+                                          .turboindex/
                                           ├ index.tvim
                                           ├ meta.json
                                           └ store.json
@@ -72,8 +72,8 @@ MCP Client ──stdio──► bin/cli.js ──spawns──► src/server.py
 
 | Resource | Returns |
 |---|---|
-| `turbocode://status` | Human-readable status string |
-| `turbocode://stats` | JSON statistics document |
+| `turboindex://status` | Human-readable status string |
+| `turboindex://stats` | JSON statistics document |
 
 ---
 
@@ -81,14 +81,14 @@ MCP Client ──stdio──► bin/cli.js ──spawns──► src/server.py
 
 ```bash
 # Install globally
-npm install -g turbocode-mcp
+npm install -g turboindex
 
 # Add to your MCP client (Claude Desktop example)
 # claude_desktop_config.json:
 {
   "mcpServers": {
-    "turbocode-mcp": {
-      "command": "turbocode-mcp"
+    "turboindex": {
+      "command": "turboindex"
     }
   }
 }
@@ -101,7 +101,7 @@ See the [Getting Started](getting-started.md) guide for detailed instructions.
 ## Project Structure
 
 ```
-turbocode-mcp/
+turboindex/
 ├── bin/cli.js                    # Node.js CLI wrapper
 ├── scripts/setup.js              # Postinstall venv bootstrap
 ├── src/server.py                 # Python MCP server
@@ -112,7 +112,7 @@ turbocode-mcp/
 │   ├── architecture.md           # System design & decisions
 │   ├── reference.md              # Technical deep-dive
 │   └── roadmap.md                # Development roadmap
-├── .turbocode/                   # Created on first index
+├── .turboindex/                   # Created on first index
 │   ├── index.tvim                # Serialized vector index
 │   ├── meta.json                 # File tracking metadata
 │   └── store.json                # Chunk text content

@@ -39,7 +39,7 @@ class TestSearchClamp:
 class TestColdStartRecovery:
     @pytest.mark.parametrize("payload", ["[]", '"oops"', "123", "null"])
     def test_load_and_verify_rebuilds_meta_from_invalid_payloads(self, monkeypatch, tmp_path, payload):
-        d = tmp_path / ".turbocode"
+        d = tmp_path / ".turboindex"
         meta_path = d / "meta.json"
         store_path = d / "store.json"
         meta_path.write_text(payload, encoding="utf-8")
@@ -109,14 +109,14 @@ class TestDirectoryScans:
 
 class TestStartupAndShutdown:
     def test_main_removes_stale_temp_files(self, tmp_path, mocker, monkeypatch):
-        root = tmp_path / ".turbocode"
+        root = tmp_path / ".turboindex"
         index_tmp = root / "index.tvim.tmp"
         meta_tmp = root / "meta.json.tmp"
         store_tmp = root / "store.json.tmp"
         for path in [index_tmp, meta_tmp, store_tmp]:
             path.write_text("tmp", encoding="utf-8")
 
-        monkeypatch.setattr(server, "TURBOCODE_DIR", str(root))
+        monkeypatch.setattr(server, "TURBOINDEX_DIR", str(root))
         monkeypatch.setattr(server, "INDEX_PATH", str(root / "index.tvim"))
         monkeypatch.setattr(server, "META_PATH", str(root / "meta.json"))
         monkeypatch.setattr(server, "STORE_PATH", str(root / "store.json"))

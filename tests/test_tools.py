@@ -28,7 +28,7 @@ class TestLogging:
     def test_log_message(self, capsys):
         server.log("hello world")
         captured = capsys.readouterr()
-        assert "[TurboCode MCP]" in captured.err
+        assert "[TurboIndex]" in captured.err
         assert "hello world" in captured.err
 
 
@@ -171,7 +171,7 @@ class TestLogCapturing:
     def test_log_writes_to_stderr(self, capsys):
         server.log("hello")
         captured = capsys.readouterr()
-        assert "[TurboCode MCP] hello" in captured.err
+        assert "[TurboIndex] hello" in captured.err
 
     def test_debug_silent_when_disabled(self, capsys):
         server.DEBUG_MODE = False
@@ -183,7 +183,7 @@ class TestLogCapturing:
         server.DEBUG_MODE = True
         server.debug("visible")
         captured = capsys.readouterr()
-        assert "[TurboCode MCP] [DEBUG] visible" in captured.err
+        assert "[TurboIndex] [DEBUG] visible" in captured.err
         server.DEBUG_MODE = False
 
 
@@ -237,7 +237,7 @@ class TestMainDebugPaths:
         mocker.patch("server.mcp.run")
         server.main()
         captured = capsys.readouterr()
-        assert "TURBOCODE_DIR" in captured.err
+        assert "TURBOINDEX_DIR" in captured.err
         assert "INDEX_PATH" in captured.err
 
 

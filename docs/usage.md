@@ -230,7 +230,7 @@ read_file_content(file_path: str) → str
 
 Resources are **automatically provided** to the AI agent by the MCP client. They appear in the AI's context without needing a tool call.
 
-### `turbocode://status`
+### `turboindex://status`
 
 **MIME type:** `text/plain`
 
@@ -244,7 +244,7 @@ A lightweight status indicator that never loads the model or index.
 | Indexing in progress | `Indexing... 12 queued, 35 processed.` |
 | Idle, all files indexed | `Idle. 47 files indexed.` |
 
-### `turbocode://stats`
+### `turboindex://stats`
 
 **MIME type:** `application/json`
 
@@ -288,10 +288,10 @@ Detailed statistics as a JSON document. Also lightweight — never loads the mod
 
 ```
 1. Server starts (fast, lazy)
-2. AI checks turbocode://status → "Ready. 0 files."
+2. AI checks turboindex://status → "Ready. 0 files."
 3. AI calls index_directory("/project") → "Queued 47 files."
 4. AI calls search_codebase("query") → results (first call slow, model loads)
-5. AI can check turbocode://status to see indexing progress
+5. AI can check turboindex://status to see indexing progress
 6. AI calls search_codebase again → instant (model already loaded)
 ```
 
@@ -337,8 +337,8 @@ Detailed statistics as a JSON document. Also lightweight — never loads the mod
 
 | Operation | First call | Subsequent calls |
 |---|---|---|
-| `turbocode://status` | < 1ms | < 1ms |
-| `turbocode://stats` | < 1ms | < 1ms |
+| `turboindex://status` | < 1ms | < 1ms |
+| `turboindex://stats` | < 1ms | < 1ms |
 | `get_index_stats()` | < 1ms | < 1ms |
 | `index_directory` (scan only) | ~50ms | ~50ms |
 | `search_codebase` | ~5s (model load) | ~200ms |
@@ -368,9 +368,9 @@ Detailed statistics as a JSON document. Also lightweight — never loads the mod
 
 ---
 
-## File Format (`~/.turbocode/`)
+## File Format (`~/.turboindex/`)
 
-The server creates and manages these files in your home directory (`~/.turbocode/`):
+The server creates and manages these files in your home directory (`~/.turboindex/`):
 
 ### `index.tvim`
 

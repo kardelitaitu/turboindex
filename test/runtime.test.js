@@ -19,7 +19,7 @@ function makeExitTrap() {
 }
 
 function createTempProject() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'turbocode-mcp-'));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'turboindex-'));
   const venvDir = path.join(root, '.venv');
   const binDir = path.join(venvDir, 'bin');
   const pipPath = path.join(binDir, 'pip');
@@ -347,25 +347,25 @@ describe('Runtime behavior', () => {
     assert.deepStrictEqual(exitTrap.codes, [130, 143]);
   });
 
-  it('setup.log prefixes with [turbocode-mcp]', () => {
+  it('setup.log prefixes with [turboindex]', () => {
     const logs = [];
     const originalLog = console.log;
     console.log = (msg) => logs.push(msg);
     try {
       setup.log('test message');
-      assert.strictEqual(logs[0], '[turbocode-mcp] test message');
+      assert.strictEqual(logs[0], '[turboindex] test message');
     } finally {
       console.log = originalLog;
     }
   });
 
-  it('setup.error prefixes with [turbocode-mcp] ERROR', () => {
+  it('setup.error prefixes with [turboindex] ERROR', () => {
     const errors = [];
     const originalError = console.error;
     console.error = (msg) => errors.push(msg);
     try {
       setup.error('something went wrong');
-      assert.strictEqual(errors[0], '[turbocode-mcp] ERROR: something went wrong');
+      assert.strictEqual(errors[0], '[turboindex] ERROR: something went wrong');
     } finally {
       console.error = originalError;
     }

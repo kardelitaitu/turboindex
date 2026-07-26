@@ -199,7 +199,7 @@ def benchmark_indexing(tmp_dir: str, num_files: int) -> dict:
     server.INDEX_PATH = os.path.join(tmp_dir, "bench_index.tvim")
     server.META_PATH = os.path.join(tmp_dir, "bench_meta.json")
     server.STORE_PATH = os.path.join(tmp_dir, "bench_store.json")
-    server.TURBOCODE_DIR = tmp_dir
+    server.TURBOINDEX_DIR = tmp_dir
     os.makedirs(tmp_dir, exist_ok=True)
 
     server.ensure_resources()
@@ -313,7 +313,7 @@ def main():
     parser.add_argument("--json", action="store_true", help="Output raw JSON instead of markdown")
     args = parser.parse_args()
 
-    tmp_dir = tempfile.mkdtemp(prefix="turbocode_bench_")
+    tmp_dir = tempfile.mkdtemp(prefix="turboindex_bench_")
 
     print("Benchmarking TurboCode MCP...", file=sys.stderr)
     print(f"  Files: {args.files}, Search iterations: {args.searches}", file=sys.stderr)

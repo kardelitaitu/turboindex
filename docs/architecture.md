@@ -1,12 +1,12 @@
 # Architecture
 
-> System design, key decisions, and rationale for TurboCode MCP.
+> System design, key decisions, and rationale for TurboIndex.
 
 ---
 
 ## Overview
 
-TurboCode MCP bridges the JavaScript ecosystem (npm) with a Python-based vector search engine. It packages a Python MCP server as a globally-installable npm package, handling environment setup transparently.
+TurboIndex bridges the JavaScript ecosystem (npm) with a Python-based vector search engine. It packages a Python MCP server as a globally-installable npm package, handling environment setup transparently.
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -14,8 +14,8 @@ TurboCode MCP bridges the JavaScript ecosystem (npm) with a Python-based vector 
 │                                                           │
 │  ┌──────────────────────────────────────────────────┐    │
 │  │  Auto-loaded Resources                           │    │
-│  │  ├─ turbocode://status  (index progress)         │    │
-│  │  └─ turbocode://stats   (detailed metrics)       │    │
+│  │  ├─ turboindex://status  (index progress)         │    │
+│  │  └─ turboindex://stats   (detailed metrics)       │    │
 │  └──────────────────────────────────────────────────┘    │
 │  ┌──────────────────────────────────────────────────┐    │
 │  │  Callable Tools                                  │    │
@@ -50,9 +50,9 @@ TurboCode MCP bridges the JavaScript ecosystem (npm) with a Python-based vector 
 │  └────────────────────────────────────────────────┘       │
 │                                                           │
 │  ┌── Storage ────────────────────────────────────┐       │
-│  │  .turbocode/index.tvim   (turbovec binary)     │       │
-│  │  .turbocode/meta.json    (file tracking)       │       │
-│  │  .turbocode/store.json   (chunk content)       │       │
+│  │  .turboindex/index.tvim   (turbovec binary)     │       │
+│  │  .turboindex/meta.json    (file tracking)       │       │
+│  │  .turboindex/store.json   (chunk content)       │       │
 │  └────────────────────────────────────────────────┘       │
 └──────────────────────────────────────────────────────────┘
 ```
@@ -75,7 +75,7 @@ A thin shim that bridges the npm ecosystem to the Python runtime.
 
 ### 2. Postinstall Setup (`scripts/setup.js`)
 
-Runs automatically after `npm install -g turbocode-mcp`.
+Runs automatically after `npm install -g turboindex`.
 
 **Responsibilities:**
 - Create an isolated Python virtual environment (`.venv/`)
@@ -106,7 +106,7 @@ The core of the application. A Python server using the FastMCP framework.
 
 **Rationale:**
 - The fastembed model consumes ~30MB of RAM, much lighter than the old sentence-transformers model
-- Resources (`turbocode://status`, `turbocode://stats`) and `get_index_stats()` never need the model
+- Resources (`turboindex://status`, `turboindex://stats`) and `get_index_stats()` never need the model
 - If the AI only checks status, the model is never loaded, saving significant memory
 - Startup time drops from ~5s to ~100ms
 
@@ -126,7 +126,7 @@ The core of the application. A Python server using the FastMCP framework.
 - Results are immediately available for already-indexed files
 
 **Trade-off:** Search results are partial until the queue drains. Accepted because:
-- The `turbocode://status` resource tells the AI how many files remain
+- The `turboindex://status` resource tells the AI how many files remain
 - The AI can communicate "indexing in progress" to the user
 - Most projects are indexed within a few minutes
 
@@ -191,13 +191,13 @@ The core of the application. A Python server using the FastMCP framework.
 
 ### Decision 8: Directory Structure
 
-**Choice:** The persistent index lives in `~/.turbocode/` (user home directory), not in the indexed project or package root.
+**Choice:** The persistent index lives in `~/.turboindex/` (user home directory), not in the indexed project or package root.
 
 **Rationale:**
 - Keeps the indexed project clean (no hidden folder injected)
 - Survives npm reinstall/upgrade (package root is ephemeral)
 - User home is always writable, unlike global `node_modules/`
-- The `.turbocode/` directory is git-ignored in the package
+- The `.turboindex/` directory is git-ignored in the package
 
 **Trade-off:** Indexing multiple independent projects with the same server means they share a single index. Acceptable for the v1; multi-project named indexes are on the roadmap.
 
@@ -213,7 +213,7 @@ server.py starts
   ├── Parse CLI flags (--debug, --help, --version handled by cli.js)
   ├── Validate Python version (>= 3.9)
   ├── Validate required packages (fastmcp, turbovec, etc.)
-  ├── Create ~/.turbocode/ if missing
+  ├── Create ~/.turboindex/ if missing
   ├── Load meta.json + store.json (small JSON, instant)
   ├── RECOVERY CHECK: count(store) vs count(meta) vs index_dim
   │   └── If diverged → log warning, rebuild from store data
@@ -384,7 +384,7 @@ def atomic_write(path: str, data: str):
     os.replace(tmp, path)     # Atomic on Windows + POSIX
 
 def persist_all():
-    os.makedirs(TURBOCODE_DIR, exist_ok=True)
+    os.makedirs(TURBOINDEX_DIR, exist_ok=True)
     with index_lock:
         # Atomic index write
         index.write(INDEX_PATH + ".tmp")
@@ -515,4 +515,4 @@ def queue_depth() -> int:
 | **Air-gapped** | No network calls for embedding or search. The model downloads once to cache, then runs offline. |
 | **No user data egress** | Code content never leaves the process. No telemetry, no analytics. |
 | **Isolated Python env** | Dependencies are installed in a dedicated `.venv`, not system Python. |
-| **File access scope** | The server only reads files explicitly provided via `index_directory`. It writes only to `~/.turbocode/`. |
+| **File access scope** | The server only reads files explicitly provided via `index_directory`. It writes only to `~/.turboindex/`. |

@@ -1130,7 +1130,7 @@ class TestEnsureIndexPathEdgeCases:
     """INDEX_PATH being a directory or special file."""
 
     def test_index_path_is_directory_creates_new(self, tmp_path, mocker, monkeypatch):
-        d = tmp_path / ".turbocode"
+        d = tmp_path / ".turboindex"
         d.mkdir(parents=True, exist_ok=True)
         idx_path = d / "index.tvim"
         idx_path.mkdir()
@@ -1142,7 +1142,7 @@ class TestEnsureIndexPathEdgeCases:
         assert server.index is not None
 
     def test_index_path_existing_empty_file(self, tmp_path, mocker, monkeypatch):
-        d = tmp_path / ".turbocode"
+        d = tmp_path / ".turboindex"
         d.mkdir(parents=True, exist_ok=True)
         idx_path = d / "index.tvim"
         idx_path.write_text("")
@@ -1303,7 +1303,7 @@ class TestHandleIndexNonExistentPath:
 
 
 class TestIndexStatsResourceFields:
-    """turbocode://stats resource contains required fields."""
+    """turboindex://stats resource contains required fields."""
 
     def test_stats_resource_fields(self):
         result = server.index_stats()
@@ -1427,7 +1427,7 @@ class TestHandleIndexEncodeWrongShape:
 
 
 class TestIndexStatsDirectoriesField:
-    """turbocode://stats shows directories list."""
+    """turboindex://stats shows directories list."""
 
     def test_directories_list_in_stats_resource(self, populated_state):
         result = server.index_stats()
@@ -1884,7 +1884,7 @@ class TestGetIndexStatsDirectoryPath:
     """get_index_stats handles INDEX_PATH being a directory."""
 
     def test_index_path_is_directory(self, tmp_path):
-        d = tmp_path / ".turbocode"
+        d = tmp_path / ".turboindex"
         d.mkdir(parents=True, exist_ok=True)
         idx_dir = d / "index.tvim"
         idx_dir.mkdir()
@@ -1910,7 +1910,7 @@ class TestIndexDirectoryEnsureResourcesFailure:
 
 
 class TestIndexStatsResourceModelLoadedNoIndex:
-    """turbocode://stats with model loaded but no index."""
+    """turboindex://stats with model loaded but no index."""
 
     def test_model_loaded_no_index_resource(self):
         server.model = object()

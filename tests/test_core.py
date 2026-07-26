@@ -545,7 +545,7 @@ class TestLoadAndVerifyNonDictStoreRebuild:
     """load_and_verify rebuilds from store when meta is invalid."""
 
     def test_meta_non_dict_with_valid_store_rebuilds(self, monkeypatch, tmp_path):
-        d = tmp_path / ".turbocode"
+        d = tmp_path / ".turboindex"
         d.mkdir(parents=True, exist_ok=True)
         meta_p = d / "meta.json"
         meta_p.write_text("[1, 2, 3]")
