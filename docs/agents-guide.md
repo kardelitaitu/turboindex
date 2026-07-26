@@ -266,6 +266,104 @@ and kept the index fresh with `update_file_index` after edits.
 
 ---
 
+## FAQ
+
+### Why are my search results empty?
+
+**Three common causes, in order of likelihood:**
+
+1. **You haven't indexed yet.** Call `index_directory("/your/project")` first.
+   Indexing is async — check `get_index_stats()` to see if files are still queued.
+2. **The model hasn't loaded yet.** First `search_codebase` call loads the embedding
+   model (~5s). During that load, results can be empty. Check
+   `turboindex://stats` → `"model_loaded": true` to confirm.
+3. **Files are gitignored.** By default, `index_directory` respects `.gitignore`.
+   Pass `respect_gitignore=False` to index everything, or check your `.gitignore` rules.
+
+**Quick fix:** Run `index_directory` + `get_index_stats` + wait a few seconds + retry search.
+
+### Do I need to re-index after `git pull`?
+
+**Yes — but it's fast.** Call `index_directory("/project")` again. The server diffs
+against the last index and only processes new, changed, or deleted files. A pull
+that changed 5 files only re-indexes those 5 — not the whole project.
+
+```bash
+# After git pull:
+index_directory("/project")
+# → "Queued 5 files (3 changed, 2 new) for indexing."
+```
+
+### Why is the first search so slow?
+
+TurboIndex uses lazy loading — the embedding model (jina-v2-base-code, 300MB) loads
+only when you call `search_codebase` for the first time. This keeps server startup
+fast (~100ms) and memory low until you actually need search.
+
+| Call | Latency | Reason |
+|---|---|---|
+| 1st `search_codebase` | ~5s | Model loads into memory |
+| 2nd+ `search_codebase` | ~12ms | Model is cached in RAM |
+
+There's no way around the first-call delay — it's the model download/load time.
+Subsequent calls are fast.
+
+### Does TurboIndex work with monorepos?
+
+**Yes.** Call `index_directory` on each package:
+
+```
+index_directory("/monorepo/packages/frontend")
+index_directory("/monorepo/packages/backend")
+index_directory("/monorepo/packages/shared")
+```
+
+All packages share the same index. `search_codebase("auth logic")` returns results
+from all three packages. There's no per-project index isolation — everything is
+searchable together.
+
+### How do I reset everything and start fresh?
+
+```
+drop_index()
+```
+
+This clears the index, metadata, and store from both memory and disk. After
+dropping, call `index_directory` to re-index from scratch.
+
+### How long does indexing take?
+
+| Scale | Files | Time to index |
+|---|---|---|
+| Small project | < 100 | ~5 seconds |
+| Medium project | 100–500 | ~15–25 seconds |
+| Large project | 500–1000 | ~30–45 seconds |
+| Very large | 1000+ | ~1+ minute |
+
+Files are processed in batches of 5 in the background. You can search while
+indexing is in progress — `search_codebase` returns whatever is already indexed.
+
+### What file types are indexed?
+
+`.py`, `.rs`, `.md`, `.txt`, `.js`, `.ts`, `.go`, `.toml`, `.json`, `.yaml`, `.yml`
+
+Files are capped at 2000 characters per chunk (simple v1 strategy). Binary files,
+images, and unsupported extensions are skipped silently.
+
+### Can I exclude files from indexing?
+
+Yes — two ways:
+
+1. **`.gitignore` (default).** `index_directory` respects all `.gitignore` files
+   in the directory tree. To index everything including gitignored files:
+   `index_directory("/project", respect_gitignore=False)`
+
+2. **Remove a single file.** To remove a file from the index without touching
+   anything else, delete it from `~/.turboindex/meta.json` and `store.json`,
+   then restart the server.
+
+---
+
 ## Why this matters
 
 Without these instructions, a coding agent might:
