@@ -1,6 +1,6 @@
 {
   "name": "turboindex",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fully local semantic code search for your AI assistant. Powered by Google TurboQuant vector quantization and jina-v2-base-code embeddings (768-dim, 8K context, 30+ languages). One-command install, zero config, zero cloud. npm install -g turboindex",
   "main": "bin/cli.js",
   "bin": {

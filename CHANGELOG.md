@@ -6,6 +6,28 @@
 
 ---
 
+## [1.0.1] — 2026-07-26
+
+### Changed
+
+- **Updated project description** — new punchier tagline across GitHub, npm, and README: "Fully local semantic code search for your AI assistant. Powered by Google TurboQuant vector quantization and jina-v2-base-code embeddings."
+- **README intro rewritten** to match the new description style.
+
+### Added
+
+- **Community health files:** CODE_OF_CONDUCT.md (Contributor Covenant 2.0), SECURITY.md (GitHub private vulnerability reporting), SUPPORT.md, CONTRIBUTING.md, issue templates (bug report + feature request), pull request template.
+- **GitHub Discussions enabled.**
+- **Community profile at 100%.**
+
+### Fixed
+
+- **Runtime tests** — 14 tests updated for redesigned setup.js API (log/error format, execSync injection, checkFn).
+- **Prepublish MCP smoke test** — added missing `--stdio` flag.
+- **JS test paths** — explicit file paths for Windows compatibility.
+- **Integration test encoding** — UTF-8 with error replacement for cross-platform robustness.
+
+---
+
 ## [1.0.0] — 2026-07-25
 
 ### Added
