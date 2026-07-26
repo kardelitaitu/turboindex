@@ -20,7 +20,7 @@ Please read it before participating.
 | Embeddings | fastembed (jina-v2-base-code) |
 | Tests (Python) | pytest |
 | Tests (JS) | node:test |
-| Lint/format | ruff (Python), Prettier (JS) |
+| Lint/format | ruff (Python) |
 
 ## Development Setup
 
@@ -83,8 +83,8 @@ npm run lint:format
 ### Benchmarks
 
 ```bash
-.venv/Scripts/python benchmarks/benchmark.py
-.venv/Scripts/python benchmarks/benchmark.py --files 500 --searches 200 --json
+node scripts/run-python.js benchmarks/benchmark.py
+node scripts/run-python.js benchmarks/benchmark.py --files 500 --searches 200 --json
 ```
 
 ## Project Structure
