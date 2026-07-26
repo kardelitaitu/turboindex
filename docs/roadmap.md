@@ -384,6 +384,8 @@
 
 ### Features
 
+- [ ] **Per-file exclusion tool** — `remove_file_from_index(path)` to remove a single file without waiting for the next `index_directory` scan. Current workaround: add to `.gitignore` and re-run `index_directory`. Revealed by FAQ ("Can I exclude files from indexing?").
+- [ ] **Exclusion visibility** — `get_index_stats()` should report files skipped by `.gitignore` or unsupported extensions, so users can audit what was excluded.
 - [ ] Multi-project / named indexes (separate `.tvim` per project)
 - [ ] File-system watch mode (inotify/FSEvents for auto-re-index)
 - [ ] `--model` flag to choose embedding model (e.g. `all-mpnet-base-v2`)
