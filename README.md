@@ -14,10 +14,10 @@ npm install -g turboindex    # Download the package
 npm approve-scripts turboindex  # Allow the setup script to run (see note below)
 ```
 
-> **Note:** npm's `allow-scripts` security feature blocks postinstall scripts by default.
+> **Note:** npm ≥10 blocks postinstall scripts by default for security.
 > The second command approves TurboIndex's setup script, which creates a Python virtual
-> environment and installs dependencies automatically. You'll see a banner with numbered
-> progress steps as it sets up.
+> environment and installs dependencies automatically. If you're on npm &lt;10 and don't see the warning,
+> skip the second command — your npm version runs postinstall automatically.
 
 [![npm version](https://img.shields.io/npm/v/turboindex.svg)](https://www.npmjs.com/package/turboindex)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
@@ -41,7 +41,7 @@ npm approve-scripts turboindex
 You'll see the postinstall setup script run:
 
 ```
-  TurboIndex v1.0.1 — Local codebase vector search
+  TurboIndex v1.x — Local codebase vector search
 
 [1/5] Checking Node.js
   ✓ Node.js v20.11.0
